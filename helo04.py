@@ -23,16 +23,30 @@ while True:
     # Lấy kích thước khung hình
     height, width = frame.shape[:2]
     
-    # Tính toán tọa độ của tâm khung hình
-    center_x, center_y = width // 2, height // 2
+    # Tính toán tọa độ để chia khung hình thành 9 ô
+    third_x = width // 3
+    third_y = height // 3
     
-    # Vẽ đường kẻ dọc qua tâm trên khung hình phát hiện chuyển động
-    cv2.line(thresh, (center_x, 0), (center_x, height), (255, 255, 255), 5)
+    # Vẽ các đường kẻ dọc để chia khung hình thành 3 cột
+    cv2.line(thresh, (third_x, 0), (third_x, height), (255, 255, 255), 2)
+    cv2.line(thresh, (2 * third_x, 0), (2 * third_x, height), (255, 255, 255), 2)
     
-    # Vẽ đường kẻ ngang qua tâm trên khung hình phát hiện chuyển động
-    cv2.line(thresh, (0, center_y), (width, center_y), (255, 255, 255), 5)
+    # Vẽ các đường kẻ ngang để chia khung hình thành 3 hàng
+    cv2.line(thresh, (0, third_y), (width, third_y), (255, 255, 255), 2)
+    cv2.line(thresh, (0, 2 * third_y), (width, 2 * third_y), (255, 255, 255), 2)
     
-    # Hiển thị khung hình phát hiện chuyển động với các đường kẻ
+    # Hiển thị số thứ tự trên các ô
+    for i in range(3):
+        for j in range(3):
+            # Tính toán tọa độ của ô hiện tại
+            x = j * third_x
+            y = i * third_y
+            # Tọa độ của vị trí để hiện số
+            text_position = (x + third_x // 2 - 10, y + third_y // 2 + 10)
+            # Hiện số thứ tự (từ 1 đến 9)
+            cv2.putText(thresh, str(i * 3 + j + 1), text_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+    
+    # Hiển thị khung hình phát hiện chuyển động với các đường kẻ và số thứ tự
     cv2.imshow("Motion Detection", thresh)
     
     # Điều kiện để thoát vòng lặp khi nhấn phím 'q'
