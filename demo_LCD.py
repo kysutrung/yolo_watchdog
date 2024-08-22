@@ -1,4 +1,0 @@
-
-import lcddriver
-                
-print("hehehe")
