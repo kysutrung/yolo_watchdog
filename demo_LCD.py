@@ -1,1 +1,4 @@
-sudo i2cdetect -y 1
+
+import lcddriver
+                
+print("hehehe")
