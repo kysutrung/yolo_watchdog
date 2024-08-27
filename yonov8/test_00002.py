@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 
 # Tải mô hình YOLOv8
-model = YOLO(r"C:\Users\trung\Downloads\anomaly_detector\yolov8_custom\yolov8_custom.pt")
+model = YOLO("yolov8_custom.pt")
 
 # Mở kết nối với webcam (source="0" là webcam)
 cap = cv2.VideoCapture(0)
