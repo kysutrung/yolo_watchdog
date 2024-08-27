@@ -21,7 +21,7 @@ draw = ImageDraw.Draw(image)
 font = ImageFont.load_default()
 
 # Viết chữ "Hello World" lên màn hình
-text = "Hello World"
+text = "dit me may"
 (draw_width, draw_height) = draw.textsize(text, font=font)
 draw.text(((oled.width - draw_width) // 2, (oled.height - draw_height) // 2), text, font=font, fill=255)
 
