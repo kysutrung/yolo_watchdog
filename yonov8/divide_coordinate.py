@@ -11,13 +11,18 @@ def chia_khung(hang, cot):
     model = YOLO('yolov8_custom.pt')
 
     cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("khong the truy cap camera")
+        return
 
     while True:
+        print("dm code1")
         #doc tu khung hinh webcam
         ret, frame = cap.read()
         if not ret:
             print("khong the doc khung hinh tu khung")
             break
+        print("dm code2")
         
         #nhan dien vat the
         results = model(frame)
@@ -57,12 +62,6 @@ def chia_khung(hang, cot):
         #Hien thi khung hinh       
         cv2.imshow('Webcam', frame)
         
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    
-    #giai phong tai nguyen
-        cap.release()
-        cv2.destroyAllWindows()
 
 a = 4
 b = 4
