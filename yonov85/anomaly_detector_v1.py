@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO("yolov8n.pt")
+model = YOLO("yolov8_cust2.pt")
 hinh_anh_dau_vao = cv2.VideoCapture(0)
 
 def xac_dinh_vi_tri(x_center, frame_width):
@@ -25,7 +25,7 @@ while True:
     ket_qua = model.predict(source=khung_hinh,
                             conf=0.3,
                             device="cpu",
-                            classes=[0])
+                            classes=[1])
 
     for vat_the in ket_qua:
         for box in vat_the.boxes:
