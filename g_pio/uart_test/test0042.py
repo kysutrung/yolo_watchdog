@@ -2,7 +2,7 @@ import serial
 import time
 
 # Cấu hình cổng serial để kết nối với Arduino
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)  # Thay đổi '/dev/ttyACM0' nếu cổng khác
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Đợi Arduino khởi động
 
 # Danh sách các số để gửi (chẵn và lẻ)
