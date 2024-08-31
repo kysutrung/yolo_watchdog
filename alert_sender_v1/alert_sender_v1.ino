@@ -8,8 +8,10 @@ uint8_t diaChiMACNhan[] = {1, 2, 3, 4, 5, 6};
 #define ledNow 14
 
 struct duLieu {
-  int khuVuc;
-  int soLuong;
+  int a;
+  int b;
+  int c;
+  int d;
 };
 
 void setup() {
@@ -41,7 +43,7 @@ void setup() {
 void loop() {
     //khởi tạo một biến chứa dữ liệu
     duLieu duLieuTuRP3;
-    // Kiểm tra nếu có đủ dữ liệu cho struct
+    //kiểm tra nếu có đủ dữ liệu cho struct
     if (Serial.available() >= sizeof(duLieuTuRP3)) {
         // Đọc dãy byte và lưu vào struct
         Serial.readBytes((uint8_t*)&duLieuTuRP3, sizeof(duLieuTuRP3));
