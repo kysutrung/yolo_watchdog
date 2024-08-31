@@ -14,7 +14,8 @@ def xac_dinh_vi_tri(x_center, frame_width):
     elif 3 * frame_width / 4 <= x_center <= frame_width:
         print(f"Vật thể đang ở khu 4")
 
-def giao_tiep_man_hinh():
+#gửi tín hiệu nhận biết qua cổng serial usb
+def abc():
     print()
 
 while True:
