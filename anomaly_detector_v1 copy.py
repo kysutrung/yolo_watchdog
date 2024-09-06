@@ -6,14 +6,16 @@ import struct
 ser = serial.Serial('/dev/ttyUSB0', 115200) #check lại khi kết nối cam
 time.sleep(2)  # Đợi Arduino khởi động
 
-a = list_a[1]
-b = list_a[2]
-c = list_a[3]
-d = list_a[4]
+num_a = 0
 
 while True:
+    a = list_a[num_a]
+    b = list_a[num_a]
+    c = list_a[num_a]
+    d = list_a[num_a]
     data = struct.pack('iiii', a, b, c, d)
     ser.write(data)
     ser.flush()
     print("OK")
     time.sleep(1)
+    num += 1
