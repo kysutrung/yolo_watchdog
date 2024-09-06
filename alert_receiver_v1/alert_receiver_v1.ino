@@ -1,18 +1,20 @@
 //nhận tín hiệu esp now
 #include <esp_now.h>
 #include <WiFi.h>
+//nút điều chỉnh mode
+//PHẢI CHECK LẠI CHÂN   CHÂN ĐANG SAI
+#define butA 32
+#define butB 33
 //đèn báo tín hiệu, đèn báo nguồn, đèn báo các trường hợp cảnh báo
 #define ledNow 25
 //còi báo động
-#define beepPin 26
-//xử lý màn hình thông báo
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET     -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#define beepPin 21
+//xử lý màn hình thông báo  VIẾT LẠI THƯ VIỆN VÀ KHAI BÁO CHÂN CHO MÀN HÌNH
+#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
+#include <SPI.h>             // Arduino SPI library
+
+
 
 // Cấu trúc dữ liệu để nhận
 struct duLieu {
