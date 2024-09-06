@@ -1,18 +1,21 @@
 import serial
 import time
+import struct
 
 # Cấu hình cổng serial để kết nối với Arduino
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 
+num_a = 0
 
-# Danh sách các số để gửi (chẵn và lẻ)
-numbers_to_send = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-for number in numbers_to_send:
-    # Gửi số đến Arduino
-    ser.write(f"{number}\n".encode('utf-8'))
+for number in range(0, 10):
+    a = num_a
+    b = num_a
+    c = num_a
+    d = num_a
+    data = struct.pack('iiii', a, b, c, d)
+    ser.write(data.encode('utf-8'))
     print(f"Sent: {number}")
-    
+    num_a += 1
     # Đợi một chút để Arduino xử lý
     time.sleep(1)
 
