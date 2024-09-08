@@ -1,17 +1,8 @@
-import serial
-import time
-import struct
-
 from ultralytics import YOLO
 import cv2
 
-# Cấu hình cổng serial
-ser = serial.Serial('/dev/ttyUSB0', 115200) #check lại khi kết nối cam
-time.sleep(2)  # Đợi Arduino khởi động
-
-
 # Cấu hình mô hình Yolo
-model = YOLO("yolov8n.pt")
+model = YOLO("yolov5n_custom2.pt")
 hinh_anh_dau_vao = cv2.VideoCapture(0)
 
 def xac_dinh_vi_tri(x_center, frame_width):

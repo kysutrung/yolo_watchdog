@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 # Tải mô hình YOLOv8 pre-trained
-model = YOLO("yolov5n_custom2.pt")
+model = YOLO("yolov5n.pt")
 
 # Lấy tên các lớp từ mô hình
 classes = model.names
