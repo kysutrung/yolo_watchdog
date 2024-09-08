@@ -7,7 +7,7 @@ ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Đợi Arduino khởi động
 
 # Danh sách các số để gửi (chẵn và lẻ)
-numbers_to_send = [1, 2, 3, 4]
+numbers_to_send = [1, 2, 3, 4] #hehe
 
 for number in numbers_to_send:
     # Gửi số đến Arduino
