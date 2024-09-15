@@ -2,6 +2,11 @@
 
 (Yolo v8 & Custom Dataset, ESP NOW)
 
+![Photo01](https://github.com/kysutrung/autumn_opening_project/blob/main/mediaa/yolo_cam_prj.jpg)
+
+
+![Photo02](https://github.com/kysutrung/autumn_opening_project/blob/main/mediaa/yolo_cam_prj1.jpg)
+
 Comming Soon..........................
 
 Quick Note(cho những thằng đang làm dự án này):
