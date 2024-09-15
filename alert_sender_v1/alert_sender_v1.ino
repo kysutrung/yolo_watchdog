@@ -3,10 +3,10 @@
 
 /*
 NỘI DUNG ĐIỂU KHIỂN
- - nhận tín hiệu từ RP3 dưới dạng struct
-  led now - báo now khởi tạo có thành công không
-  led nguồn - báo có điện
-  led vị trí - báo dựa trên cái struct nhận được
+ - nhận tín hiệu từ RP3 dưới dạng struct - ok
+  led now - báo now khởi tạo có thành công không - ok
+  led nguồn - báo có điện - ok
+  led vị trí - báo dựa trên cái struct nhận được - chưa test
 */
 
 //khai báo chân

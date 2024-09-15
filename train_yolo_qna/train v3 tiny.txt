@@ -1,0 +1,66 @@
+Hướng dẫn huấn luyện Tiny YOLOv3 với PyTorch
+
+1. Cài đặt môi trường
+Cài đặt môi trường PyTorch và Ultralytics YOLOv3:
+
+bash
+Sao chép mã
+git clone https://github.com/ultralytics/yolov3
+cd yolov3
+pip install -r requirements.txt
+2. Chuẩn bị dữ liệu
+Cấu trúc thư mục: Tổ chức dữ liệu theo cấu trúc chuẩn:
+kotlin
+Sao chép mã
+/path/to/dataset/
+    ├── images/
+    │   ├── train/
+    │   ├── val/
+    └── labels/
+        ├── train/
+        ├── val/
+Tạo file data.yaml: Đây là file cấu hình dữ liệu, trong đó bạn cần định nghĩa đường dẫn đến các tập tin train.txt và val.txt, cũng như số lượng lớp (classes) và các nhãn của chúng. Ví dụ:
+yaml
+Sao chép mã
+train: /path/to/dataset/images/train
+val: /path/to/dataset/images/val
+
+nc: 2  # Số lớp của bạn (ví dụ: 2)
+names: ['class1', 'class2']  # Tên các lớp
+3. Cấu hình mô hình
+Ultralytics đã cung cấp một file cấu hình sẵn cho Tiny YOLOv3.
+
+Sử dụng file yolov3-tiny.yaml: Bạn có thể tìm file này trong thư mục models của repo Ultralytics YOLOv3. Nếu bạn cần thay đổi gì (chẳng hạn như số lượng lớp), bạn có thể chỉnh sửa file này.
+4. Huấn luyện mô hình
+Chạy lệnh sau để bắt đầu quá trình huấn luyện:
+
+bash
+Sao chép mã
+python train.py --img 416 --batch 16 --epochs 300 --data /path/to/data.yaml --cfg models/yolov3-tiny.yaml --weights '' --name yolov3_tiny
+--img 416: Kích thước ảnh (có thể là 416, 320, v.v.).
+--batch 16: Kích thước batch (có thể điều chỉnh dựa trên bộ nhớ GPU của bạn).
+--epochs 300: Số lượng epochs.
+--data: Đường dẫn đến file data.yaml.
+--cfg: Đường dẫn đến file cấu hình mô hình (yolov3-tiny.yaml).
+--weights '': Không sử dụng trọng số pre-trained.
+--name yolov3_tiny: Tên của phiên huấn luyện.
+5. Giám sát và đánh giá mô hình
+TensorBoard: Bạn có thể sử dụng TensorBoard để theo dõi quá trình huấn luyện. Kết quả huấn luyện sẽ được lưu trong thư mục runs/train/.
+
+Để xem kết quả:
+
+bash
+Sao chép mã
+tensorboard --logdir=runs
+6. Sử dụng mô hình đã huấn luyện
+Sau khi huấn luyện xong, bạn có thể sử dụng mô hình để dự đoán:
+
+bash
+Sao chép mã
+python detect.py --weights runs/train/yolov3_tiny/weights/best.pt --img 416 --conf 0.25 --source data/test.jpg
+--weights: Đường dẫn đến tệp trọng số tốt nhất (best.pt).
+--img 416: Kích thước ảnh đầu vào.
+--conf 0.25: Ngưỡng xác suất để lọc các dự đoán.
+--source: Đường dẫn đến ảnh, video hoặc thư mục cần dự đoán.
+7. Tối ưu hóa mô hình cho thiết bị nhúng
+Sau khi huấn luyện, bạn có thể chuyển đổi mô hình sang định dạng TensorFlow Lite hoặc ONNX để chạy trên các thiết bị nhúng như Raspberry Pi nếu cần thiết.

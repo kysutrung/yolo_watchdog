@@ -1,0 +1,32 @@
+How to train yolov8 v5
+
+Bước 1 Chuẩn bị dataset
+- Chụp hoặc tải ở đâu đó
+- Label bằng labelImg
+- Chia file test val train theo tỉ lệ cần
+
+Bước 2 train
+
+cài đặt các thư viện cần có trong file requirement
+nên cài tạo một môi trường mới trong anaconda để không bị xung đột với các cài đặt khác
+
+kiểm tra pytorch
+
+python
+import torch
+torch.__version__
+
+cài pytorch rtx3050 chạy với đời 11.
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
+
+lệnh chạy train
+
+yolo task=detect mode=train epochs=300 data=data.yaml model=yolov8m.pt imgsz=640 batch=16
+
+trước khi test phải xem máy đang ở môi trường nào
+
+lệnh test v8
+yolo task=detect mode=predict model=yolov8n.pt show=True conf=0.5 source=abc.mp4
+
+lệnh test v5
+python detect.py --weights best.pt --img 640 --conf 0.25 --source path/to/your/image_or_video

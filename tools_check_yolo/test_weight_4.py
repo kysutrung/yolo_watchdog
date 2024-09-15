@@ -1,3 +1,5 @@
+#code chạy nhận diện xong vẽ bouding box và tâm vật thể hiện lên màn hình
+
 from ultralytics import YOLO
 import cv2
 

@@ -1,8 +1,11 @@
+#code nạp bên raspberry pi
+#code nạp esp chưa có, tự xây được bằng code sender
+
 import serial
 import time
 import struct
 
-# Cấu hình cổng serial để kết nối với Arduino
+# Cấu hình cổng serial để kết nối với ESP(kiểm tra cổng trước khi chạy)
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Đợi Arduino khởi động
 
