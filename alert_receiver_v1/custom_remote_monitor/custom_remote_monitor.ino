@@ -1,4 +1,4 @@
-//CODE cho esp32 nhận thông báo từ now
+//CODE cho bộ nhận cảnh báo từ xa phát triển dựa trên esp32
 
 /*
 CÁC NỘI DUNG ĐIỀU KHIỂN
