@@ -6,7 +6,7 @@ import time
 import struct
 
 # Cấu hình cổng serial để kết nối với ESP
-ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
+ser = serial.Serial('/dev/', 9600, timeout=1) #ttyUSB0 cổng trên cùng bên phải rp3
 time.sleep(2)  # Đợi ESP khởi động
 
 # Cấu hình mô hình Yolo
