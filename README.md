@@ -1,18 +1,50 @@
-# Dự Án: Thiết Bị Hỗ Trợ Giám Sát An Toàn Công Nghiệp Tự Động
+![Photo01](https://github.com/kysutrung/multi_zones_safety_assistant_camera/blob/main/mediaa/light_theme_banner.png)
 
-(Yolo v8 & Custom Dataset, ESP NOW)
+# YOLO Watchdog
 
-![Photo01](https://github.com/kysutrung/autumn_opening_project/blob/main/mediaa/yolo_cam_prj.jpg)
+Machine Learning Applied Multi-Zone Safety Supervisor Assistant Camera System Project
 
+Keyword: yolov8, esp now, python app, hardware design.
 
-![Photo02](https://github.com/kysutrung/autumn_opening_project/blob/main/mediaa/yolo_cam_prj1.jpg)
+## 📑 Project Description
 
-Comming Soon..........................
+Building a smart surveillance camera system base on YOLO algorithm. Able to detect the presence of prohibited (weapon, lighter, liquid can, human....) and indispensable objects (protective gear, human who run machine....) in each area at a location (factory, construction site, work place...) for safety reasons. Sending notification to remote monitor unit via ESP NOW. Helps those who work as a safety supervisor to work more effectively.
 
-Quick Note(cho những thằng đang làm dự án này):
+## ❓ What & Why YOLO Algorithm
+__YOLO__ (You Only Look Once) is a real-time object detection algorithm that identifies objects in images or video frames with high speed and accuracy. Unlike traditional methods that scan an image in multiple passes, YOLO processes the entire image in a single forward pass, making it very efficient.
 
-- Các file code nạp vào module phát cảnh báo hoàn thiện 90%
-- File code nạp vào module nhận cảnh báo từ xa hoàn thiện 70%
-- Các bài code đề có note chú thích phát triển bên trong, đọc kĩ để làm tiếp các thứ đang làm dở.
-- Các file trọng số đã train cần phải copy đúng đường dẫn thì các tool check mới chạy
-- Các tài liệu như số liệu train, video test, báo cáo dự án, file thiết kế 3D, sơ đồ khối hệ thống check trong máy local
+It’s ideal for surveillance cameras due to its real-time detection speed and ability to track multiple objects efficiently.
+![Photo01](https://github.com/kysutrung/multi_zones_safety_assistant_camera/blob/main/mediaa/light_theme_banner.png)
+
+## ❓ What & Why ESP-NOW
+__ESP-NOW__ is a wireless communication protocol developed by Espressif for direct, low-power, peer-to-peer communication between devices, without the need for a Wi-Fi network. It uses the same 2.4GHz frequency as Wi-Fi but allows devices to send small packets of data to each other instantly, with minimal delay. It supports broadcasting to multiple devices and has a range similar to Wi-Fi.
+![Photo01](https://github.com/kysutrung/multi_zones_safety_assistant_camera/blob/main/mediaa/light_theme_banner.png)
+
+## 💻 List of Features (working on process)
+__Image Processing Unit__
+- [x] Objects detection
+- [x] Send notification via ESP NOW
+
+__Remote Monitor Unit__
+- [x] Receive notification via ESP NOW
+- [ ] Alert depend on setting
+- [ ] Expansion Port
+
+__Window PC App (ESP NOW UNIT needed)__
+- [ ] Control UI
+- [ ] Display images processed
+
+## 📥 Installation Guide
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+```bash
+pip install foobar
+```
+
+## 🛠️ Prototype 001
+## 👏 Acknowledgements
+## 📞 Support
+If you have any questions or suggestions, feel free!!!
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
