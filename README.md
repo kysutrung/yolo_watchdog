@@ -22,12 +22,12 @@ __ESP-NOW__ is a wireless communication protocol developed by Espressif for dire
 
 ## 💻 List of Features (working on process)
 __Image Processing Unit__
-- [x] Objects detection
+- [x] Objects detection with custom dataset trained model
 - [x] Send notification via ESP NOW
 
 __Remote Monitor Unit__
 - [x] Receive notification via ESP NOW
-- [ ] Alert depend on setting
+- [x] Alert depend on setting
 - [ ] Expansion Port
 
 __Window PC App (ESP NOW UNIT needed)__
@@ -42,7 +42,9 @@ pip install foobar
 ```
 
 ## 🛠️ Prototype 001
+
 ## 👏 Acknowledgements
+
 ## 📞 Support
 If you have any questions or suggestions, feel free!!!
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
