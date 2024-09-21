@@ -31,6 +31,7 @@ __Remote Monitor Unit__
 - [ ] Expansion Port
 
 __Window PC App (ESP NOW UNIT needed)__
+- [ ] Whole system work right in Windows OS
 - [ ] Control UI
 - [ ] Display images processed
 
