@@ -129,7 +129,7 @@ void test_d(){
 void enterViewMode(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(BLUE);
+    StickCP2.Display.setTextColor(GREEN);
     StickCP2.Display.setCursor(20, 20);
     StickCP2.Display.print("CAI DAT HIEN TAI");
 
