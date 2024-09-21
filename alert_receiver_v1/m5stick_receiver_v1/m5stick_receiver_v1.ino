@@ -3,6 +3,15 @@
 //DỰ ÁN ĐANG TEST: YOLO WATCHDOG
 
 #include "M5StickCPlus2.h"  // Đọc tài liệu để cài thư viện M5StickC Plus 2
+#include <esp_now.h>
+#include <WiFi.h>
+
+uint32_t duration_a = 100;
+
+int g = 0;
+int h = 0;
+int i = 0;
+int k = 0;
 
 int x = 0;
 int y = 0;
@@ -15,6 +24,31 @@ char khuVuc1Cam = 'k';
 char khuVuc2Cam = 'k';
 char khuVuc3Cam = 'k';
 char khuVuc4Cam = 'k';
+
+typedef struct struct_message {
+  int number_1;
+  int number_2;
+  int number_3;
+  int number_4;
+} struct_message;
+
+// Khởi tạo cấu trúc dữ liệu
+struct_message incomingData;
+
+int count_a = 0;
+
+// Hàm callback khi nhận được dữ liệu
+void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+  memcpy(&incomingData, data, sizeof(incomingData));
+   
+  if(incomingData.number_1 > 0 || incomingData.number_2 >0 || incomingData.number_3 >0 || incomingData.number_4 >0){
+    StickCP2.Speaker.tone(4000, duration_a);
+    g = incomingData.number_1;
+    h = incomingData.number_2;
+    i = incomingData.number_3;
+    k = incomingData.number_4;
+  }
+}
 
 void hienThiXacNhan(char y){
   if(y == 'a'){
@@ -127,36 +161,67 @@ void test_d(){
 }
 
 void enterViewMode(){
-  if(x == 0){
-    StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(GREEN);
-    StickCP2.Display.setCursor(20, 20);
-    StickCP2.Display.print("CAI DAT HIEN TAI");
-
-    int num_u = num_c % 2;
-
-    if(num_u == 1){
-      StickCP2.Display.setCursor(20, 45);
-      StickCP2.Display.print("KV1: ");
-      hienThiXacNhan(khuVuc1Cam);
-      StickCP2.Display.setCursor(20, 65);
-      StickCP2.Display.print("KV2: ");
-      hienThiXacNhan(khuVuc2Cam);
-      StickCP2.Display.setCursor(20, 85);
-      StickCP2.Display.print("KV3: ");
-      hienThiXacNhan(khuVuc3Cam);
-      StickCP2.Display.setCursor(20, 105);
-      StickCP2.Display.print("KV4: ");
-      hienThiXacNhan(khuVuc4Cam);
-      
-    }
-    if(num_u == 0){
-      StickCP2.Display.clear();
+  if(num_c > 0){
+     StickCP2.Display.clear();
       StickCP2.Display.setCursor(20, 20);
-      StickCP2.Display.print("Running...");
-    }
+      StickCP2.Display.setTextColor(GREEN);
+      StickCP2.Display.print("ONLINE");
 
-    x++;
+      if(incomingData.number_1 > 0 && khuVuc1Cam == 'a'){
+        StickCP2.Display.setTextColor(RED);
+        StickCP2.Display.setCursor(20, 45);
+        StickCP2.Display.print("KV1: ");
+        StickCP2.Display.print(g);
+        StickCP2.Display.print(" nguoi");
+      }
+      else{
+        StickCP2.Display.setTextColor(GREEN);
+        StickCP2.Display.setCursor(20, 45);
+        StickCP2.Display.print("KV1: An toan");
+      }
+
+      if(incomingData.number_2 > 0 && khuVuc2Cam == 'a'){
+        StickCP2.Display.setTextColor(RED);
+        StickCP2.Display.setCursor(20, 65);
+        StickCP2.Display.print("KV2: ");
+        StickCP2.Display.print(h);
+        StickCP2.Display.print(" nguoi");
+      }
+      else{
+        StickCP2.Display.setTextColor(GREEN);
+        StickCP2.Display.setCursor(20, 65);
+        StickCP2.Display.print("KV2: An toan");
+      }
+
+      if(incomingData.number_3 > 0 && khuVuc3Cam == 'a'){
+        StickCP2.Display.setTextColor(RED);
+        StickCP2.Display.setCursor(20, 85);
+        StickCP2.Display.print("KV3: ");
+        StickCP2.Display.print(i);
+        StickCP2.Display.print(" nguoi");
+      }
+      else{
+        StickCP2.Display.setTextColor(GREEN);
+        StickCP2.Display.setCursor(20, 85);
+        StickCP2.Display.print("KV3: An toan");
+      }
+
+      if(incomingData.number_4 > 0 && khuVuc4Cam == 'a'){
+        StickCP2.Display.setTextColor(RED);
+        StickCP2.Display.setCursor(20, 105);
+        StickCP2.Display.print("KV4: ");
+        StickCP2.Display.print(k);
+        StickCP2.Display.print(" nguoi");
+      }
+      else{
+        StickCP2.Display.setTextColor(GREEN);
+        StickCP2.Display.setCursor(20, 105);
+        StickCP2.Display.print("KV4: An toan");
+      }
+
+      StickCP2.Display.drawRect(5, 0, 235, 135, GREEN); //vẽ hình dạng viền
+
+      delay(100);
   }
 }
 
@@ -367,6 +432,16 @@ void setup() {
     // Cấu hình và khởi động M5StickC Plus 2
     auto cfg = M5.config();
     StickCP2.begin(cfg);
+
+    // Khởi động Wi-Fi ở chế độ Station (trạm)
+    WiFi.mode(WIFI_STA);
+    // Khởi động ESP-NOW
+    if (esp_now_init() != ESP_OK) {
+
+    }
+    
+    // Đăng ký hàm callback để xử lý dữ liệu nhận được
+    esp_now_register_recv_cb(onDataRecv);
 
     // Đặt màu nền màn hình là màu đen
     StickCP2.Display.fillScreen(BLACK);
