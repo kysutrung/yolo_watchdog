@@ -6,25 +6,29 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
+//Global Var
+//thời gian kêu còi
 uint32_t duration_a = 100;
-
+//lưu thông tin cảnh báo
 int g = 0;
 int h = 0;
 int i = 0;
 int k = 0;
-
-int x = 0;
-int y = 0;
-int z = 0;
-int w = 0;
-int num_a = 0;
+//khống chế vòng lặp chế độ
+bool x = 0;
+//khống chế cơ chế bấm nút
+int num_a = -1;
 int num_b = -1;
 int num_c = 0;
+//lưu thông tin cài đặt của từng khu vực
 char khuVuc1Cam = 'k';
 char khuVuc2Cam = 'k';
 char khuVuc3Cam = 'k';
 char khuVuc4Cam = 'k';
+//dùng để hiển thị màn hình intro
+bool daChayIntro = 0;
 
+//cấu trúc của gói dữ liệu nhận
 typedef struct struct_message {
   int number_1;
   int number_2;
@@ -34,8 +38,6 @@ typedef struct struct_message {
 
 // Khởi tạo cấu trúc dữ liệu
 struct_message incomingData;
-
-int count_a = 0;
 
 // Hàm callback khi nhận được dữ liệu
 void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
@@ -50,119 +52,167 @@ void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
   }
 }
 
-void hienThiXacNhan(char y){
-  if(y == 'a'){
-    StickCP2.Display.print("khong nguoi");
-  }
-  if(y == 'b'){
-    StickCP2.Display.print("coming soon");
-  }
-}
-
-void hienThiDoiTuongCam(char n){
+void chonDoiTuongCam(char n){
   if(n == 'a'){
+    StickCP2.Display.fillRect(5, 43, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.setTextColor(BLACK);
+    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.print("Cam nguoi");
+
+    StickCP2.Display.setTextColor(GREEN);
+
+    StickCP2.Display.setCursor(20, 75);
+    StickCP2.Display.print("Cho phep tat ca");
+
+    StickCP2.Display.setCursor(20, 105);
+    StickCP2.Display.print("Phai co nguoi");
     StickCP2.Display.setTextColor(RED);
-    StickCP2.Display.setCursor(70, 70);
-    StickCP2.Display.print("Co nguoi");
+    StickCP2.Display.print(" NA");
   }
   if(n == 'b'){
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.print("Cam nguoi");
+
+    StickCP2.Display.fillRect(5, 73, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.setTextColor(BLACK);
+    StickCP2.Display.setCursor(20, 75);
+    StickCP2.Display.print("Cho phep tat ca");
+
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 105);
+    StickCP2.Display.print("Phai co nguoi");
     StickCP2.Display.setTextColor(RED);
-    StickCP2.Display.setCursor(70, 70);
-    StickCP2.Display.print("Coming soon");
+    StickCP2.Display.print(" NA");
+  }
+  if(n == 'c'){
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.print("Cam nguoi");
+
+    StickCP2.Display.setCursor(20, 75);
+    StickCP2.Display.print("Cho phep tat ca");
+
+    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.setTextColor(BLACK);
+    StickCP2.Display.setCursor(20, 105);
+    StickCP2.Display.print("Phai co nguoi");
+    StickCP2.Display.setTextColor(RED);
+    StickCP2.Display.print(" NA");
   }
 }
 
-void test_a(){
+void caiDatKV1(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.setCursor(40, 40);
-    StickCP2.Display.print("BI CAM:");
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.print("_Cai dat KV1_____");
 
-    int num_u = num_c % 2;
-
-    if(num_u == 1){
+    if(num_c == 1){
       khuVuc1Cam = 'a';
     }
-    if(num_u == 0){
+    if(num_c == 2){
       khuVuc1Cam = 'b';
     }
+    if(num_c == 3){
+      khuVuc1Cam = 'c';
+    }
+    if(num_c == 4){
+      num_c = 1;
+      khuVuc1Cam = 'a';
+    }   
 
-    hienThiDoiTuongCam(khuVuc1Cam);
+    chonDoiTuongCam(khuVuc1Cam);
     
-    x++;
+    x = 1;
   }
 }
 
-void test_b(){
+void caiDatKV2(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.setCursor(40, 40);
-    StickCP2.Display.print("BI CAM:");
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.print("_Cai dat KV2_____");
 
-    int num_u = num_c % 2;
-
-    if(num_u == 1){
+    if(num_c == 1){
       khuVuc2Cam = 'a';
     }
-    if(num_u == 0){
+    if(num_c == 2){
       khuVuc2Cam = 'b';
     }
+    if(num_c == 3){
+      khuVuc2Cam = 'c';
+    }
+    if(num_c == 4){
+      num_c = 1;
+      khuVuc2Cam = 'a';
+    }   
 
-    hienThiDoiTuongCam(khuVuc2Cam);
+    chonDoiTuongCam(khuVuc2Cam);
     
-    x++;
+    x = 1;
   }
 }
 
-void test_c(){
+void caiDatKV3(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.setCursor(40, 40);
-    StickCP2.Display.print("BI CAM:");
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.print("_Cai dat KV3_____");
 
-    int num_u = num_c % 2;
-
-    if(num_u == 1){
+    if(num_c == 1){
       khuVuc3Cam = 'a';
     }
-    if(num_u == 0){
+    if(num_c == 2){
       khuVuc3Cam = 'b';
     }
+    if(num_c == 3){
+      khuVuc3Cam = 'c';
+    }
+    if(num_c == 4){
+      num_c = 1;
+      khuVuc3Cam = 'a';
+    }   
 
-    hienThiDoiTuongCam(khuVuc3Cam);
+    chonDoiTuongCam(khuVuc3Cam);
     
-    x++;
+    x = 1;
   }
 }
 
-void test_d(){
+void caiDatKV4(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.setCursor(40, 40);
-    StickCP2.Display.print("BI CAM:");
+    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.print("_Cai dat KV4_____");
 
-    int num_u = num_c % 2;
-
-    if(num_u == 1){
+    if(num_c == 1){
       khuVuc4Cam = 'a';
     }
-    if(num_u == 0){
+    if(num_c == 2){
       khuVuc4Cam = 'b';
     }
+    if(num_c == 3){
+      khuVuc4Cam = 'c';
+    }
+    if(num_c == 4){
+      num_c = 1;
+      khuVuc4Cam = 'a';
+    }   
 
-    hienThiDoiTuongCam(khuVuc4Cam);
+    chonDoiTuongCam(khuVuc4Cam);
     
-    x++;
+    x = 1;
   }
 }
 
-void enterViewMode(){
+void onlineMode(){
   if(num_c > 0){
-     StickCP2.Display.clear();
+      StickCP2.Display.clear();
       StickCP2.Display.setCursor(20, 20);
       StickCP2.Display.setTextColor(GREEN);
       StickCP2.Display.print("ONLINE");
@@ -226,126 +276,82 @@ void enterViewMode(){
 }
 
 void hienThiMode(int var_a){
-  if(var_a == 1){
-    StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(BLACK);
-    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 13, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
 
-    StickCP2.Display.setCursor(20, 15);
+  StickCP2.Display.clear();
+  StickCP2.Display.setTextColor(GREEN);
+  StickCP2.Display.setCursor(20, 15);
+  StickCP2.Display.print("_Cai dat_________");
+
+  if(var_a == 1){
+    //StickCP2.Display.fillCircle(25, 22, 5, GREEN);
+    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
+    StickCP2.Display.fillRect(5, 43, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.setTextColor(BLACK);
+    StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 1");
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.print("   Setup");
 
     StickCP2.Display.setTextColor(GREEN);
 
-    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
 
-    StickCP2.Display.setCursor(20, 75);
-    StickCP2.Display.print("Khu vuc 3");
-
     StickCP2.Display.setCursor(20, 105);
-    StickCP2.Display.print("Khu vuc 4");    
+    StickCP2.Display.print("Khu vuc 3");    
   }
 
   if(var_a == 2){
-    StickCP2.Display.clear();
-    
-    StickCP2.Display.setTextColor(GREEN);
-
-    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 1");
 
+    StickCP2.Display.fillRect(5, 73, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
-    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 43, 235, 20, GREEN); //vẽ hình dạng fill hình có màu
-
-    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.print("   Setup");
 
     StickCP2.Display.setTextColor(GREEN);
 
-    StickCP2.Display.setCursor(20, 75);
-    StickCP2.Display.print("Khu vuc 3");
-
     StickCP2.Display.setCursor(20, 105);
-    StickCP2.Display.print("Khu vuc 4");      
+    StickCP2.Display.print("Khu vuc 3");  
   }
 
   if(var_a == 3){
-    StickCP2.Display.clear();
-    
-    StickCP2.Display.setTextColor(GREEN);
-
-    StickCP2.Display.setCursor(20, 15);
+    StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 1");
 
-    StickCP2.Display.setCursor(20, 45);
+    StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
 
+    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
-    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 73, 235, 20, GREEN); //vẽ hình dạng fill hình có màu
-
-    StickCP2.Display.setCursor(20, 75);
-    StickCP2.Display.print("Khu vuc 3");
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.print("   Setup");
-    
-    StickCP2.Display.setTextColor(GREEN);
-
     StickCP2.Display.setCursor(20, 105);
-    StickCP2.Display.print("Khu vuc 4");     
+    StickCP2.Display.print("Khu vuc 3");     
   }
 
   if(var_a == 4){
-    StickCP2.Display.clear();
-    
-    StickCP2.Display.setTextColor(GREEN);
-
-    StickCP2.Display.setCursor(20, 15);
-    StickCP2.Display.print("Khu vuc 1");
-
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 2");
 
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 3");
 
+    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
-    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 103, 235, 20, GREEN); //vẽ hình dạng fill hình có màu
-
     StickCP2.Display.setCursor(20, 105);
-    StickCP2.Display.print("Khu vuc 4");
-    StickCP2.Display.setTextColor(WHITE);
-    StickCP2.Display.print("   Setup");
+    StickCP2.Display.print("Khu vuc 4");  
     
   }
 
   if(var_a == 5){
-    StickCP2.Display.clear();
-    
-    StickCP2.Display.setTextColor(GREEN);
-
-    StickCP2.Display.setCursor(20, 15);
-    StickCP2.Display.print("Khu vuc 2");
-
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 3");
 
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 4");
 
+    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
-    //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 103, 235, 20, GREEN); //vẽ hình dạng fill hình có màu
-
     StickCP2.Display.setCursor(20, 105);
-    StickCP2.Display.print("Xac nhan");
+    StickCP2.Display.print("Xac nhan");  
     
   }
 
@@ -356,10 +362,7 @@ void luaChonMode(){
   if(StickCP2.BtnA.wasClicked()){
     num_a++;
     num_c = 0;
-    y = 0;
     x = 0;
-    z = 0;
-    w = 0;
   }
 
   if(num_a == 5){
@@ -369,8 +372,6 @@ void luaChonMode(){
   if(StickCP2.BtnB.wasClicked()){
     num_c++;
     x = 0;
-    y = 0;
-    z = 0;
   }
 
   if(num_a != num_b){
@@ -399,33 +400,40 @@ void luaChonMode(){
 
   if(num_a == 0){
     if(num_c > 0){
-      test_a();
+      caiDatKV1();
     }
   }
 
   if(num_a == 1){
     if(num_c > 0){
-      test_b();
+      caiDatKV2();
     }
   }
 
   if(num_a == 2){
     if(num_c > 0){
-      test_c();
+      caiDatKV3();
     }
   }
 
   if(num_a == 3){
     if(num_c > 0){
-      test_d();
+      caiDatKV4();
     }
   }
 
   if(num_a == 4){
     if(num_c > 0){
-      enterViewMode();
+      onlineMode();
     }
   }
+}
+
+void hienThiIntro(){
+  StickCP2.Display.clear();
+  StickCP2.Display.setTextColor(GREEN);
+  StickCP2.Display.setCursor(20, 15);
+  StickCP2.Display.print("INTRO"); 
 }
 
 void setup() {
@@ -452,9 +460,9 @@ void setup() {
 
     StickCP2.Display.fillScreen(BLACK);
 
+    hienThiIntro();
 }
 
-void loop() {
+void loop(){
     luaChonMode();
-
 }
