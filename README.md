@@ -28,7 +28,7 @@ __ESP-NOW__ is a wireless communication protocol developed by Espressif for dire
 
 <p align="center"><strong>Remote Monitor Unit Algorithm Diagram</strong></p>
 
-![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/remote_monitor_diagram.jpg)
+![Photo02](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/remote_monitor_diagram.jpg)
 
 ## 💻 List of Features (working on process)
 __Image Processing Unit__
