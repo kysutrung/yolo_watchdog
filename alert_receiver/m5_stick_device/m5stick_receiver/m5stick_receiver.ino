@@ -2085,12 +2085,12 @@ void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
 
 void chonDoiTuongCam(char n){
   if(n == 'a'){
-    StickCP2.Display.fillRect(5, 43, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 43, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Cam nguoi");
 
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
 
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Cho phep tat ca");
@@ -2101,30 +2101,30 @@ void chonDoiTuongCam(char n){
     StickCP2.Display.print(" NA");
   }
   if(n == 'b'){
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Cam nguoi");
 
-    StickCP2.Display.fillRect(5, 73, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 73, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Cho phep tat ca");
 
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Phai co nguoi");
     StickCP2.Display.setTextColor(RED);
     StickCP2.Display.print(" NA");
   }
   if(n == 'c'){
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Cam nguoi");
 
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Cho phep tat ca");
 
-    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 103, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Phai co nguoi");
@@ -2136,7 +2136,7 @@ void chonDoiTuongCam(char n){
 void caiDatKV1(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 15);
     StickCP2.Display.print("_Cai dat KV1_____");
 
@@ -2163,7 +2163,7 @@ void caiDatKV1(){
 void caiDatKV2(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 15);
     StickCP2.Display.print("_Cai dat KV2_____");
 
@@ -2190,7 +2190,7 @@ void caiDatKV2(){
 void caiDatKV3(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 15);
     StickCP2.Display.print("_Cai dat KV3_____");
 
@@ -2217,7 +2217,7 @@ void caiDatKV3(){
 void caiDatKV4(){
   if(x == 0){
     StickCP2.Display.clear();
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
     StickCP2.Display.setCursor(20, 15);
     StickCP2.Display.print("_Cai dat KV4_____");
 
@@ -2245,8 +2245,9 @@ void onlineMode(){
   if(num_c > 0){
       StickCP2.Display.clear();
       StickCP2.Display.setCursor(20, 20);
-      StickCP2.Display.setTextColor(GREEN);
+      StickCP2.Display.setTextColor(WHITE);
       StickCP2.Display.print("ONLINE");
+      StickCP2.Display.setTextColor(GREEN);
 
       if(incomingData.number_1 > 0 && khuVuc1Cam == 'a'){
         StickCP2.Display.setTextColor(RED);
@@ -2309,19 +2310,19 @@ void onlineMode(){
 void hienThiMode(int var_a){
 
   StickCP2.Display.clear();
-  StickCP2.Display.setTextColor(GREEN);
+  StickCP2.Display.setTextColor(WHITE);
   StickCP2.Display.setCursor(20, 15);
   StickCP2.Display.print("_Cai dat_________");
 
   if(var_a == 1){
     //StickCP2.Display.fillCircle(25, 22, 5, GREEN);
     //StickCP2.Display.drawRect(5, 0, 235, 135, uiColor); //vẽ hình dạng viền
-    StickCP2.Display.fillRect(5, 43, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 43, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 1");
 
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
 
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
@@ -2334,12 +2335,12 @@ void hienThiMode(int var_a){
     StickCP2.Display.setCursor(20, 45);
     StickCP2.Display.print("Khu vuc 1");
 
-    StickCP2.Display.fillRect(5, 73, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 73, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
 
-    StickCP2.Display.setTextColor(GREEN);
+    StickCP2.Display.setTextColor(WHITE);
 
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Khu vuc 3");  
@@ -2352,7 +2353,7 @@ void hienThiMode(int var_a){
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 2");
 
-    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 103, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Khu vuc 3");     
@@ -2365,7 +2366,7 @@ void hienThiMode(int var_a){
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 3");
 
-    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 103, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Khu vuc 4");  
@@ -2379,7 +2380,7 @@ void hienThiMode(int var_a){
     StickCP2.Display.setCursor(20, 75);
     StickCP2.Display.print("Khu vuc 4");
 
-    StickCP2.Display.fillRect(5, 103, 235, 20 , GREEN); //vẽ hình dạng fill hình có màu
+    StickCP2.Display.fillRect(5, 103, 235, 20 , WHITE); //vẽ hình dạng fill hình có màu
     StickCP2.Display.setTextColor(BLACK);
     StickCP2.Display.setCursor(20, 105);
     StickCP2.Display.print("Xac nhan");  
@@ -2476,7 +2477,7 @@ void hienThiIntro(){
   StickCP2.Display.print(".");
   delay(1000);
   StickCP2.Display.clear();
-  StickCP2.Display.setTextColor(GREEN);
+  StickCP2.Display.setTextColor(WHITE);
   StickCP2.Display.setCursor(15, 30);
   StickCP2.Display.print("ISI Lab - ISVNU");
   StickCP2.Display.setCursor(15, 60);
