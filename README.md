@@ -92,7 +92,7 @@ __For Raspberry Pi__
 
 ### 2. Train your own YOLO.
 
-Our found some quick but effective video tutorials for you:
+We've found some quick and effective video tutorials for you:
 
 [How to train YOLOv8 with custom dataset using your local PC](https://youtu.be/gRAyOPjQ9_s?si=JTgtRKwl3u6fy0oe)
 
@@ -108,7 +108,7 @@ __Camera Unit__
 
 "Capture and process image" part - copy [image_processor code](https://github.com/kysutrung/yolo_watchdog/tree/main/image_processor) to sd card of Raspberry Pi, make sure it is in the same folder as the YOLO weight file.
 
-"Notification sender" part - load ESP32 dev board with [alert_sender code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_sender)
+"Notification sender" part - load ESP32 dev board with [alert_sender code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_sender), find MAC address of ESP32 with XXX
 
 __Remote Monitor Unit__
 
@@ -131,6 +131,9 @@ M5StickCplus2 IOT device - load with [m5stick_receiver code](https://github.com/
   <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/camera_unit.jpg" alt="Mô tả 2" width="300"/>
 </p>
 
+These are how the hardware look when we are done. This prototype cost 80 USD in 2024.
+
+## 📖 Testing
 
 
 ## 👏 References
