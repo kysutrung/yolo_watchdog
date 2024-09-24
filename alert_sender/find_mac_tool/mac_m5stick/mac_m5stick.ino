@@ -1,29 +1,3 @@
-
-E8:68:E7:03:07:A4 - con ko có mạch
-B0:A7:32:2F:A7:C8 - con có ăn ten
-10:06:1C:27:EF:14 - của m5
-
-///////////////////////////////////
-
-#include <WiFi.h>
-#include "esp_wifi.h" 
-
-void setup() {
-  Serial.begin(115200);
-  Serial.println();
-  WiFi.begin();
-  // Khởi động WiFi ở chế độ Station để lấy địa chỉ MAC
-  WiFi.mode(WIFI_STA);
-  Serial.print("Wi-Fi MAC Address: ");
-  Serial.println(WiFi.macAddress());
-}
-
-void loop() {
-  // Không cần làm gì trong loop
-}
-
-/////////////////////////////////
-
 #include <M5StickCPlus2.h>  // Thư viện M5StickC
 
 void setup() {
