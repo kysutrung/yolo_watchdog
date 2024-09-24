@@ -108,7 +108,7 @@ __Camera Unit__
 
 "Capture and process image" part - copy [image_processor code](https://github.com/kysutrung/yolo_watchdog/tree/main/image_processor) to sd card of Raspberry Pi, make sure it is in the same folder as the YOLO weight file.
 
-"Notification sender" part - load ESP32 dev board with [alert_sender code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_sender), find MAC address of ESP32 with XXX
+"Notification sender" part - load ESP32 dev board with [alert_sender code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_sender), find MAC address of ESP32 with [find MAC code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_sender/find_mac_tool)
 
 __Remote Monitor Unit__
 
