@@ -104,6 +104,12 @@ We've found some quick and effective video tutorials for you:
 
 This is how these code work in our system design, you can do the way you want.
 
+<br>
+
+<p align="center"><strong>System Design Diagram</strong></p>
+
+![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/system_design_diagram.png)
+
 __Camera Unit__
 
 "Capture and process image" part - copy [image_processor code](https://github.com/kysutrung/yolo_watchdog/tree/main/image_processor) to sd card of Raspberry Pi, make sure it is in the same folder as the YOLO weight file.
@@ -118,11 +124,6 @@ or
 
 M5StickCplus2 IOT device - load with [m5stick_receiver code](https://github.com/kysutrung/yolo_watchdog/tree/main/alert_receiver/m5_stick_device/m5stick_receiver)
 
-<br>
-
-<p align="center"><strong>System Design Diagram</strong></p>
-
-![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/system_design_diagram.png)
 
 ## 🛠️ Prototype 001
 
@@ -133,7 +134,10 @@ M5StickCplus2 IOT device - load with [m5stick_receiver code](https://github.com/
 
 These are how the hardware look when we are done. This prototype cost 80 USD in 2024.
 
-## 📖 Testing
+__📖 Testing__
+
+
+
 
 
 ## 👏 References
