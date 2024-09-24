@@ -1,5 +1,0 @@
-
-E8:68:E7:03:07:A4 - con ko có mạch
-B0:A7:32:2F:A7:C8 - con có ăn ten
-10:06:1C:27:EF:14 - của m5
-
