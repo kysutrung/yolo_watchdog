@@ -1,4 +1,4 @@
-![Photo01](https://github.com/kysutrung/multi_zones_safety_assistant_camera/blob/main/mediaa/light_theme_banner.png)
+![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/repo_cover.jpg)
 
 # YOLO Watchdog
 
@@ -127,8 +127,8 @@ M5StickCplus2 IOT device - load with [m5stick_receiver code](https://github.com/
 ## 🛠️ Prototype 001
 
 <p align="center">
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/yolo_cam_prj1.jpg" alt="Mô tả 1" width="500"/>
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/yolo_cam_prj.jpg" alt="Mô tả 2" width="500"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/remote_monitor_unit.jpg" alt="Mô tả 1" width="500"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/camera_unit.jpg" alt="Mô tả 2" width="500"/>
 </p>
 
 
