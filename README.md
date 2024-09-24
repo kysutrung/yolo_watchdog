@@ -154,7 +154,9 @@ System operation test:
 
 System operation test with M5StickC Plus2:
 
-![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_05.png)
+<p align="center">
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_05.png" alt="Mô tả 1" width="400"/>
+</p>
 
 <p align="center">
   <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_01.png" alt="Mô tả 1" width="200"/>
