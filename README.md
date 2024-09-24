@@ -146,8 +146,20 @@ YOLO weight test:
 System operation test:
 
 <p align="center">
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/anh_test01.jpg" alt="Mô tả 1" width="300" style="margin-right: 50px;"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/anh_test01.jpg" alt="Mô tả 1" width="300"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/anh_test02.jpg" alt="Mô tả 2" width="300"/>
+</p>
+
+System operation test with M5StickC Plus2:
+
+![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_05.png)
+
+<p align="center">
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_01.png" alt="Mô tả 1" width="200"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_02.png" alt="Mô tả 2" width="200"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_03.png" alt="Mô tả 3" width="200"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_04.png" alt="Mô tả 4" width="200"/>
 </p>
 
 
