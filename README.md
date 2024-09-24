@@ -104,6 +104,8 @@ We've found some quick and effective video tutorials for you:
 
 This is how these code work in our system design, you can do the way you want.
 
+__All variable names, comments in code and UI are now in Vietnamese. English language is being edited and will be updated soon.__
+
 <br>
 
 <p align="center"><strong>System Design Diagram</strong></p>
