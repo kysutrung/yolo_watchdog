@@ -130,9 +130,9 @@ M5StickCplus2 IOT device - load with [m5stick_receiver code](https://github.com/
 ## 🛠️ Prototype 001
 
 <p align="center">
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/remote_monitor_unit.jpg" alt="Mô tả 1" width="400"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/camUnit.jpg" alt="Mô tả 1" width="400"/>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/camera_unit.jpg" alt="Mô tả 2" width="400"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/rmUnit.jpg" alt="Mô tả 2" width="400"/>
 </p>
 
 These are how the hardware look when we are done. This prototype cost 80 USD in 2024.
@@ -168,6 +168,11 @@ System operation test with M5StickC Plus2:
   <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_04.png" alt="Mô tả 4" width="200"/>
 </p>
 
+M5StickC Plus2 Vietnamese language is available on M5 Burner App:
+
+<p align="center">
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5buner.jpg" alt="Mô tả 1" width="400"/>
+</p>
 
 
 
