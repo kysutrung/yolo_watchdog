@@ -171,7 +171,7 @@ System operation test with M5StickC Plus2:
 M5StickC Plus2 Vietnamese language is available on M5 Burner App:
 
 <p align="center">
-  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5buner.jpg" alt="Mô tả 1" width="400"/>
+  <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5buner.png" alt="Mô tả 1" width="400"/>
 </p>
 
 
