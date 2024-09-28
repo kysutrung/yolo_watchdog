@@ -38,7 +38,8 @@ __Image Processing Unit__
 __Remote Monitor Unit__
 - [x] Receive notification via ESP NOW
 - [x] Alert depend on setting
-- [ ] Expansion Port
+- [ ] Notification history
+- [ ] Expansion port
 
 __Window PC App (ESP NOW UNIT needed)__
 - [ ] Whole system work right in Windows OS
