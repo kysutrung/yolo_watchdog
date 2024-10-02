@@ -169,7 +169,7 @@ System operation test with M5StickC Plus2:
   <img src="https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/m5_ui_04.png" alt="Mô tả 4" width="200"/>
 </p>
 
-M5StickC Plus2 Vietnamese language is available on M5 Burner App:
+M5StickC Plus2 firmware with Vietnamese language is available on M5 Burner App:
 
 <br>
 
