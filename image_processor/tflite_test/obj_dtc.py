@@ -91,11 +91,13 @@ def run(model: str, max_results: int, score_threshold: float,
         cv2.putText(current_frame, fps_text, text_location, cv2.FONT_HERSHEY_DUPLEX,
                     font_size, text_color, font_thickness, cv2.LINE_AA)
 
-        if detection_result_list:
-            # Chỉ hiển thị kết quả nhận diện nếu có người
+        # Chỉ hiển thị bounding box nếu có đối tượng người trong danh sách kết quả
+        if detection_result_list and detection_result_list[0].detections:
             current_frame = visualize(current_frame, detection_result_list[0])
             detection_frame = current_frame
             detection_result_list.clear()
+        else:
+            detection_frame = image  # Không có đối tượng nào được nhận diện, hiển thị khung hình gốc
 
         if detection_frame is not None:
             cv2.imshow('object_detection', detection_frame)
