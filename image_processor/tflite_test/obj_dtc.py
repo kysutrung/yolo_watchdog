@@ -11,7 +11,8 @@ from mediapipe.tasks.python import vision
 from utils import visualize
 
 # Global variables to calculate FPS
-COUNTER, FPS = 0, 0
+COUNTER = 0
+FPS = 0  # Khởi tạo FPS với giá trị mặc định là 0
 START_TIME = time.time()
 
 def run(model: str, max_results: int, score_threshold: float, 
