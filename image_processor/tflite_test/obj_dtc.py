@@ -11,8 +11,7 @@ from mediapipe.tasks.python import vision
 from utils import visualize
 
 # Global variables to calculate FPS
-COUNTER = 0
-FPS = 0  # Khởi tạo FPS với giá trị mặc định là 0
+COUNTER, FPS = 0, 0
 START_TIME = time.time()
 
 def run(model: str, max_results: int, score_threshold: float, 
@@ -42,12 +41,31 @@ def run(model: str, max_results: int, score_threshold: float,
     fps_avg_frame_count = 10
 
     detection_frame = None
+    detection_result_list = []
+
+    def save_result(result: vision.ObjectDetectorResult, unused_output_image: mp.Image, timestamp_ms: int):
+        global FPS, COUNTER, START_TIME
+
+        # Tính toán FPS
+        if COUNTER % fps_avg_frame_count == 0:
+            FPS = fps_avg_frame_count / (time.time() - START_TIME)
+            START_TIME = time.time()
+
+        # Chỉ giữ lại các đối tượng là người (person)
+        human_results = [detection for detection in result.detections if detection.categories[0].category_name == 'person']
+        
+        if human_results:
+            result.detections = human_results  # Cập nhật danh sách kết quả chỉ với các đối tượng là người
+            detection_result_list.append(result)
+
+        COUNTER += 1
 
     # Khởi tạo mô hình nhận diện đối tượng
     base_options = python.BaseOptions(model_asset_path=model)
     options = vision.ObjectDetectorOptions(base_options=base_options,
-                                           running_mode=vision.RunningMode.IMAGE,
-                                           max_results=max_results, score_threshold=score_threshold)
+                                           running_mode=vision.RunningMode.LIVE_STREAM,
+                                           max_results=max_results, score_threshold=score_threshold,
+                                           result_callback=save_result)
     detector = vision.ObjectDetector.create_from_options(options)
 
     # Chụp ảnh liên tục từ camera và chạy nhận diện
@@ -63,11 +81,8 @@ def run(model: str, max_results: int, score_threshold: float,
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
 
-        # Chạy nhận diện đối tượng sử dụng mô hình (đồng bộ).
-        detection_result = detector.detect(mp_image)
-
-        # Chỉ giữ lại các đối tượng là người (person)
-        human_results = [detection for detection in detection_result.detections if detection.categories[0].category_name == 'person']
+        # Chạy nhận diện đối tượng sử dụng mô hình.
+        detector.detect_async(mp_image, time.time_ns() // 1_000_000)
 
         # Hiển thị FPS
         fps_text = 'FPS = {:.1f}'.format(FPS)
@@ -77,21 +92,15 @@ def run(model: str, max_results: int, score_threshold: float,
                     font_size, text_color, font_thickness, cv2.LINE_AA)
 
         # Chỉ hiển thị bounding box nếu có đối tượng người trong danh sách kết quả
-        if human_results:
-            detection_result.detections = human_results  # Cập nhật danh sách kết quả chỉ với các đối tượng là người
-            current_frame = visualize(current_frame, detection_result)
+        if detection_result_list and detection_result_list[0].detections:
+            current_frame = visualize(current_frame, detection_result_list[0])
             detection_frame = current_frame
+            detection_result_list.clear()
         else:
             detection_frame = image  # Không có đối tượng nào được nhận diện, hiển thị khung hình gốc
 
         if detection_frame is not None:
             cv2.imshow('object_detection', detection_frame)
-
-        # Tính toán FPS
-        COUNTER += 1
-        if COUNTER % fps_avg_frame_count == 0:
-            FPS = fps_avg_frame_count / (time.time() - START_TIME)
-            START_TIME = time.time()
 
         # Dừng chương trình nếu nhấn phím ESC.
         if cv2.waitKey(1) == 27:
