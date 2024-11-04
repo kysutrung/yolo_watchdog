@@ -9,8 +9,8 @@ def degrade_image(image, num_a):
     resized_image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
     return resized_image
  
-model = YOLO("yolov8_cust2.pt")
-cap = cv2.VideoCapture(0)
+model = YOLO("yolov8n.pt")
+cap = cv2.VideoCapture(1)
 
 while True:
     ret, frame = cap.read()
