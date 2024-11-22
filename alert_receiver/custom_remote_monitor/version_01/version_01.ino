@@ -29,12 +29,25 @@ void beepThreeTimes() {
 
 void xinChao(){
   tft.fillScreen(TFT_WHITE);
-  tft.setTextColor(TFT_BLACK);  // Màu chữ trắng
-  tft.setTextSize(2);  // Kích thước chữ
+  tft.setTextColor(TFT_BLACK);  // Màu chữ
+  tft.setTextSize(3);  // Kích thước chữ
   // Hiển thị chữ "Hello"
-  tft.setCursor(50, 100);  // Đặt vị trí con trỏ (x, y)
-  tft.print("Hello ");
+  tft.setCursor(50, 50);  // Đặt vị trí con trỏ (x, y)
+  tft.println("Hello :)");
+  tft.setCursor(50, 100);
+  if(meo <= 100){
+    tft.setTextColor(TFT_BLACK);  // Màu chữ
+  }
+  if(meo > 100){
+    tft.setTextColor(TFT_RED);  // Màu chữ
+  }
+  if(meo > 500){
+    tft.setTextColor(TFT_GREEN);  // Màu chữ
+  }
   tft.print(meo);
+  tft.setCursor(50, 160);
+  unsigned long currentMillis = millis();
+  tft.print(String(currentMillis));
 }
 
 //MAIN
@@ -56,9 +69,14 @@ void loop(){
   int y = digitalRead(butB);
   int z = digitalRead(butC);
 
+  long int seconds = millis() / 1000;
+  if(seconds % 7 == 0){
+    meo++;
+  }
+
   if(x == 0 || y == 0 || z == 0){
     tone(buzzerPin, 500, 10);
-    meo++;
+    meo--;
   }
 
   if(lastMeo != meo){
