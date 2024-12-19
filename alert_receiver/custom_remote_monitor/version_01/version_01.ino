@@ -58,7 +58,7 @@ void setup() {
   pinMode(buzzerPin, OUTPUT);
 
   tft.init();  // Khởi tạo màn hình
-  tft.setRotation(1);  // Đặt hướng màn hình (0, 90, 180, 270)
+  tft.setRotation(0);  // Đặt hướng màn hình (0, 90, 180, 270)
   tft.fillScreen(TFT_WHITE);  // Màu nền đen
   
 
