@@ -18,6 +18,9 @@ const int buzzerPin = 15;
 //GLOBAL VAR
 int meo = 0;
 int lastMeo = 0;
+int lastGau = 0;
+int lastTime = 0;
+int count_a = 0;
 
 //FUNCTION
 void beepThreeTimes() {
@@ -28,26 +31,33 @@ void beepThreeTimes() {
 }
 
 void xinChao(){
-  tft.fillScreen(TFT_WHITE);
-  tft.setTextColor(TFT_BLACK);  // Màu chữ
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE);  // Màu chữ
   tft.setTextSize(3);  // Kích thước chữ
   // Hiển thị chữ "Hello"
-  tft.setCursor(50, 50);  // Đặt vị trí con trỏ (x, y)
-  tft.println("Hello :)");
-  tft.setCursor(50, 100);
-  if(meo <= 100){
-    tft.setTextColor(TFT_BLACK);  // Màu chữ
+  tft.setCursor(50, 40);
+  tft.println("TESTING");
+  tft.setCursor(50, 65);
+  tft.println("PROGRAM");
+
+  tft.setCursor(50, 120);
+  tft.setTextColor(TFT_RED);  // Màu chữ
+
+
+  tft.print(String(count_a));
+  tft.print(" sec");
+
+  tft.setTextColor(TFT_GREEN);  // Màu chữ
+  tft.setCursor(40, 180);
+  if(meo == 1){
+    tft.print("Button 01");
   }
-  if(meo > 100){
-    tft.setTextColor(TFT_RED);  // Màu chữ
+  if(meo == 2){
+    tft.print("Button 02");
   }
-  if(meo > 500){
-    tft.setTextColor(TFT_GREEN);  // Màu chữ
+  if(meo == 3){
+    tft.print("Button 03");
   }
-  tft.print(meo);
-  tft.setCursor(50, 160);
-  unsigned long currentMillis = millis();
-  tft.print(String(currentMillis));
 }
 
 //MAIN
@@ -69,19 +79,29 @@ void loop(){
   int y = digitalRead(butB);
   int z = digitalRead(butC);
 
-  long int seconds = millis() / 1000;
-  if(seconds % 7 == 0){
-    meo++;
+  unsigned long currentMillis = millis();
+  if(currentMillis - lastTime >= 1000){
+    count_a++;
+    lastTime = currentMillis;
   }
 
-  if(x == 0 || y == 0 || z == 0){
+  if(x == 0){
     tone(buzzerPin, 500, 10);
-    meo--;
+    meo = 1;
   }
+  if(y == 0){
+    tone(buzzerPin, 500, 10);
+    meo = 2;
+  }
+  if(z == 0){
+    tone(buzzerPin, 500, 10);
+    meo = 3;
+  }  
 
-  if(lastMeo != meo){
+  if(lastMeo != count_a || lastGau != meo){
     xinChao();
-    lastMeo = meo;
+    lastMeo = count_a;
+    lastGau = meo;
   }
 
 
