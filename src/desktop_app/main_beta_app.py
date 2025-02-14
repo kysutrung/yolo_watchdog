@@ -13,7 +13,7 @@ class MyApp(tk.Tk):
         super().__init__()
         self.running = False
         self.title("YOLO WatchDog Beta 1.0")
-        self.geometry("400x210")
+        self.geometry("400x220")
 
         #hiển thị logo ở đây
         self.logo_label = Label(self)
@@ -28,7 +28,7 @@ class MyApp(tk.Tk):
 
         #nút nhấn ở đây
         self.button = Button(self, text="START / STOP", command=self.on_click)
-        self.button.pack(pady=10)
+        self.button.pack(pady=(20,10))
         self.label = Label(self, text="Stopped", font=("Arial", 12))
         self.label.pack()
 
@@ -42,11 +42,23 @@ class MyApp(tk.Tk):
             self.thread.start()
 
     def yolo_watchdog(self):
-        results = model.predict(source="0", 
-                        conf=0.3,
-                        device="cpu",
-                        classes=[0],
-                        show=True)
+        cap = cv2.VideoCapture(0)  
+        while self.running: 
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            results = model.predict(frame,
+                                    conf=0.3,
+                                    device="cpu",
+                                    classes=[0],
+                                    show=True)
+
+            if not self.running: 
+                break
+
+        cap.release()
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     app = MyApp()
