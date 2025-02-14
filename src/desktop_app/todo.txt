@@ -3,7 +3,7 @@ Tạo ra được một giao diện với nút bấm và dòng chữ hiển th�
 Điều khiển esp32 bật tắt 1 đèn led bằng laptop để test
 (gặp lỗi không thể giữ trạng thái điều khiển esp qua usb)
 
-Thêm code chạy yolov8 bản mạch định vào phần mềm
+Thêm code chạy yolov8 bản mặc định vào phần mềm
 
 Gửi lệnh điều khiển esp32 dựa vào trạng thái của yolo
 
