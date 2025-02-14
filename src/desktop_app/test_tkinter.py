@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import Label, Button
-from PIL import Image, ImageTk  # Chỉ cần nếu muốn hiển thị ảnh (có sẵn trong Python bản đầy đủ)
+from PIL import Image, ImageTk
+import threading
+import time
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -31,6 +33,17 @@ class MyApp(tk.Tk):
     def on_click(self):
         self.running = not self.running
         self.label.config(text="Running" if self.running else "Stopped")
+
+        if self.running:
+            # Chạy hàm `print_hehe` trong một luồng riêng
+            self.thread = threading.Thread(target=self.yolo_watchdog, daemon=True)
+            self.thread.start()
+
+    def yolo_watchdog(self):
+        """Hàm này sẽ chạy liên tục khi ở trạng thái 'Running'."""
+        while self.running:
+            print("hehe")
+            time.sleep(1)  # Chờ 1 giây để tránh spam quá nhanh
 
 if __name__ == "__main__":
     app = MyApp()
