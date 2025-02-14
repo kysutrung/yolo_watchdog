@@ -1,9 +1,10 @@
 Tạo ra được một giao diện với nút bấm và dòng chữ hiển thị thông báo trạng thái chạy của phần mềm?
 
 Điều khiển esp32 bật tắt 1 đèn led bằng laptop để test
-(gặp lỗi không thể giữ trạng thái điều khiển esp qua usb)
+(gặp lỗi không thể giữ trạng thái điều khiển esp qua usb - chưa fixfix)
 
 Thêm code chạy yolov8 bản mặc định vào phần mềm
+(gặp lỗi chạy được khoảng 45 giây thì bị crash chương trình)
 
 Gửi lệnh điều khiển esp32 dựa vào trạng thái của yolo
 

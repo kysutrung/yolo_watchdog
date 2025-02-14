@@ -6,7 +6,7 @@ import time
 from ultralytics import YOLO
 import cv2
 
-model = YOLO("yolov8n.pt")
+model = YOLO("yolov8n.pt") #thay trọng số ở đây
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -52,13 +52,15 @@ class MyApp(tk.Tk):
                                     conf=0.3,
                                     device="cpu",
                                     classes=[0],
-                                    show=True)
+                                    show=False)
 
             if not self.running: 
                 break
 
         cap.release()
         cv2.destroyAllWindows()
+
+
 
 if __name__ == "__main__":
     app = MyApp()
