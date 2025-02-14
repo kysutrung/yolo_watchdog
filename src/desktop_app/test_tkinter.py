@@ -13,7 +13,7 @@ class MyApp(tk.Tk):
         self.logo_label = Label(self)
         self.logo_label.pack()
         try:
-            image = Image.open("logo_demo.png")
+            image = Image.open("logo_demo2.png")
             image = image.resize((380, 120))
             self.logo = ImageTk.PhotoImage(image)
             self.logo_label.config(image=self.logo)
