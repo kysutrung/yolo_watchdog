@@ -53,6 +53,8 @@ class MyApp(tk.Tk):
                                     device="cpu",
                                     classes=[0],
                                     show=False)
+            del results
+            frame = None #không thấy hiệu quả cho lắm
 
             if not self.running: 
                 break
