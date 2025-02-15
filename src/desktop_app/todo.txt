@@ -4,7 +4,7 @@ Tạo ra được một giao diện với nút bấm và dòng chữ hiển th�
 (gặp lỗi không thể giữ trạng thái điều khiển esp qua usb - chưa fixfix)
 
 Thêm code chạy yolov8 bản mặc định vào phần mềm
-(gặp lỗi chạy được khoảng 45 giây thì bị crash chương trình)
+(gặp lỗi chạy được khoảng 45 giây thì bị crash chương trình khi chạy với cpu - chưa fixfix)
 
 Gửi lệnh điều khiển esp32 dựa vào trạng thái của yolo
 
