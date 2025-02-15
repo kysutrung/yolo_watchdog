@@ -50,7 +50,7 @@ class MyApp(tk.Tk):
 
             results = model.predict(frame,
                                     conf=0.3,
-                                    device="cpu",
+                                    device="cuda",
                                     classes=[0],
                                     show=False)
             del results
