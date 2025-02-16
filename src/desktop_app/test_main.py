@@ -6,6 +6,7 @@ import time
 from ultralytics import YOLO
 import cv2
 import serial
+import struct
 
 model = YOLO("yolov8n.pt") #thay trọng số ở đây
 
@@ -63,7 +64,7 @@ class MyApp(tk.Tk):
 
             ket_qua = model.predict(source=khung_hinh,
                                     conf=0.3,
-                                    device="cpu",
+                                    device="cuda",
                                     classes=[0],
                                     show=False)
 
