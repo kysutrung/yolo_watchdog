@@ -1,21 +1,31 @@
-#define LED_PIN 4  // Chân GPIO điều khiển LED
+#include <Arduino.h>
 
-bool lastLEDState = LOW;  // Lưu trạng thái cuối của LED
+#define LED_PIN 4  // Chân GPIO4 để điều khiển LED
 
 void setup() {
-    pinMode(LED_PIN, OUTPUT);  // Cấu hình chân LED là đầu ra
-    Serial.begin(115200);  // Khởi động Serial
-    digitalWrite(LED_PIN, lastLEDState);  // Giữ trạng thái cuối khi khởi động
+    Serial.begin(115200);  // Kết nối với laptop
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW);  // Ban đầu tắt LED
 }
 
 void loop() {
-    if (Serial.available()) {  // Kiểm tra nếu có dữ liệu Serial
-        int receivedNumber = Serial.parseInt();  // Đọc số nguyên từ Serial
-        if (receivedNumber % 2 != 0) {  // Nếu là số lẻ
-            lastLEDState = HIGH;
-        } else {
-            lastLEDState = LOW;
+    if (Serial.available() >= 32) {  // Mỗi int32 = 4 byte, 8 số = 32 byte
+        int numbers[8];
+        Serial.readBytes((char*)numbers, 32);  // Nhận dữ liệu vào mảng
+
+        bool allOdd = true;
+        for (int i = 0; i < 8; i++) {
+            if (numbers[i] % 2 == 0) {
+                allOdd = false;
+                break;
+            }
         }
-        digitalWrite(LED_PIN, lastLEDState);  // Cập nhật LED
+
+        // Bật LED nếu tất cả số là số lẻ
+        if (allOdd) {
+            digitalWrite(LED_PIN, HIGH);
+        } else {
+            digitalWrite(LED_PIN, LOW);
+        }
     }
 }
