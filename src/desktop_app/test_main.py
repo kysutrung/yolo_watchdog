@@ -8,20 +8,13 @@ import cv2
 import serial
 import struct
 
+#==========SETTING============================================
 model = YOLO("yolov8n.pt") #thay trọng số ở đây
+hinh_anh_dau_vao = cv2.VideoCapture(0) #thay đổi camera ở đây
+SERIAL_PORT = "COM10"  #thay đổi cổng cắm bộ phát sóng ở đây
+#=============================================================
 
-def xac_dinh_vi_tri(x_center, frame_width):
-    if 0 <= x_center < frame_width / 4:
-        return 4
-    elif frame_width / 4 <= x_center < frame_width / 2:
-        return 3
-    elif frame_width / 2 <= x_center < 3 * frame_width / 4:
-        return 2
-    elif 3 * frame_width / 4 <= x_center <= frame_width:
-        return 1
-
-def tao_mang_ket_qua(num_g, list_b):
-    list_b[num_g-1] += 1
+BAUD_RATE = 115200
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -66,26 +59,22 @@ class MyApp(tk.Tk):
                                     conf=0.3,
                                     device="cuda",
                                     classes=[0],
-                                    show=False)
+                                    show=True)
 
             for vat_the in ket_qua:
-                #cái mảng này để lưu vị trí
-                list_a = [0, 0, 0, 0]
-                #cái này tính tọa độ tâm để xem ô nào có người và có bao nhiêu
                 for box in vat_the.boxes:
+                    id_vat_the = int(box.cls.cpu().numpy())  #ID lớp
+                    ten_vat_the = vat_the.names[id_vat_the]  #tên lớp từ danh sách tên lớp
                     #đoạn này tính tọa độ tâm
                     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                     x_tam = int((x1 + x2) / 2)
                     y_tam = int((y1 + y2) / 2)
+                    print("Phat hien " + ten_vat_the + " tai vi tri: " + str(x_tam) + " " + str(y_tam))
 
-                    #đoạn báo xem vật thể đang ở ô nào
-                    tao_mang_ket_qua(xac_dinh_vi_tri(x_tam, 640), list_a)
+            del ket_qua
 
-                data = struct.pack('4i', *list_a)
-                ser.write(data)
-                print(f"Sent: {list_a}")
-
-
+            if not self.running: 
+                break
 
 if __name__ == "__main__":
     app = MyApp()

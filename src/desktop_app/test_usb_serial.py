@@ -2,7 +2,7 @@ import serial
 import time
 
 # Cấu hình cổng Serial (thay đổi COMx cho Windows hoặc /dev/ttyUSBx cho Linux/macOS)
-SERIAL_PORT = "COM5"  # Thay đổi nếu cần
+SERIAL_PORT = "COM10"  # Thay đổi nếu cần
 BAUD_RATE = 115200  # Phải khớp với ESP32
 
 # Giá trị số muốn gửi (chỉnh sửa tại đây)
