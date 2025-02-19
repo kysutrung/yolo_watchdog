@@ -13,19 +13,19 @@ void loop() {
         int numbers[8];
         Serial.readBytes((char*)numbers, 32);  // Nhận dữ liệu vào mảng
 
-        bool allOdd = true;
+        bool allEven = true;
         for (int i = 0; i < 8; i++) {
-            if (numbers[i] % 2 == 0) {
-                allOdd = false;
+            if (numbers[i] % 2 != 0) {
+                allEven = false;
                 break;
             }
         }
 
         // Bật LED nếu tất cả số là số lẻ
-        if (allOdd) {
-            digitalWrite(LED_PIN, HIGH);
-        } else {
+        if (allEven) {
             digitalWrite(LED_PIN, LOW);
+        } else {
+            digitalWrite(LED_PIN, HIGH);
         }
     }
 }

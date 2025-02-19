@@ -5,11 +5,34 @@ import threading
 import cv2
 from ultralytics import YOLO
 import numpy as np
+import struct
+import serial
+import time
 
 #==========SETTING============================================
 model = YOLO("yolov8n.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
+ser = serial.Serial('COM10', 115200, timeout=1) #cổng cắm bộ phát tín hiệu
 #=============================================================
+
+
+def xac_dinh_vi_tri_vat_the(x_center, y_center):
+    if x_center < 160 and y_center < 240:
+        return 1
+    elif x_center > 160 and x_center < 320 and y_center < 240:
+        return 2
+    elif x_center > 320 and x_center < 480 and y_center < 240:
+        return 3
+    elif x_center > 480 and x_center < 640 and y_center < 240:
+        return 4
+    elif x_center < 160 and y_center > 240:
+        return 5
+    elif x_center > 160 and x_center < 320 and y_center > 240:
+        return 6
+    elif x_center > 320 and x_center < 480 and y_center > 240:
+        return 7
+    elif x_center > 480 and x_center < 640 and y_center > 240:
+        return 8
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -64,11 +87,14 @@ class MyApp(tk.Tk):
             ket_qua = model.predict(source=khung_hinh,
                                     conf=0.3, 
                                     device="cuda", 
-                                    classes=[39], 
+                                    classes=[41], 
                                     show=False)
             
             #đoạn này phân tích kết quả nhận diện
             for vat_the in ket_qua:
+                #mảng lưu kết quả nhận diện
+                numbers = [0, 0, 0, 0, 0, 0, 0, 0]
+
                 for box in vat_the.boxes:
                     #xác định tên đối tượng nhận diện được
                     id_vat_the = int(box.cls.cpu().numpy())  #ID lớp
@@ -77,8 +103,17 @@ class MyApp(tk.Tk):
                     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                     x_tam = int((x1 + x2) / 2)
                     y_tam = int((y1 + y2) / 2)
+                    khu_vuc_vi_pham = xac_dinh_vi_tri_vat_the(x_tam, y_tam)
+                    print("Phat hien vi pham tai khu vuc: " + str(khu_vuc_vi_pham))
+                    numbers[khu_vuc_vi_pham - 1] += 1
+                
+                #gửi kết quả nhận diện qua bộ phát sóng
+                #đóng gói struct (8 số nguyên 4 byte)
+                data = struct.pack('8i', *numbers)
+                #gửi
+                ser.write(data)
+                print("Đã gửi dữ liệu:", numbers)
 
-                    print("Phat hien " + ten_vat_the + " tai vi tri: " + str(x_tam) + " " + str(y_tam))
 
             #đoạn này vẽ lưới 8 ô
             h, w, _ = khung_hinh.shape
