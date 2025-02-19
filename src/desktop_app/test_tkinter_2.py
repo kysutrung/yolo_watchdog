@@ -1,51 +1,77 @@
 import tkinter as tk
-from tkinter import Label, Button, Frame
-from PIL import Image, ImageTk
+from tkinter import ttk
 
-class MyApp(tk.Tk):
+class FruitStorageApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.running = False
-        self.title("YOLO WatchDog Beta 1.0")
+        self.title("Quản Lý Thùng Trái Cây")
         self.geometry("400x250")
-        self.configure(bg="#2c3e50")  # Màu nền tối sang trọng
 
-        # Khung chứa logo
-        logo_frame = Frame(self, bg="#2c3e50")
-        logo_frame.pack(pady=10)
+        # Danh sách thùng & loại quả
+        self.bins = ["Thùng 1", "Thùng 2", "Thùng 3"]
+        self.fruits = ["Banana", "Apple", "Orange"]
 
-        # Hiển thị logo nếu có
-        self.logo_label = Label(logo_frame, bg="#2c3e50")
-        self.logo_label.pack()
-        try:
-            image = Image.open("logo_demo.png")
-            image = image.resize((380, 120))
-            self.logo = ImageTk.PhotoImage(image)
-            self.logo_label.config(image=self.logo)
-        except:
-            self.logo_label.config(text="(No Logo)", fg="white", font=("Arial", 12, "bold"))
+        # Lưu danh sách trái cây đã chọn cho từng thùng
+        self.bin_fruit_selection = {bin_name: {fruit: tk.BooleanVar() for fruit in self.fruits} for bin_name in self.bins}
 
-        # Khung chứa nút và trạng thái
-        control_frame = Frame(self, bg="#2c3e50")
-        control_frame.pack(pady=10)
+        # Tạo khung chứa nội dung
+        self.main_frame = tk.Frame(self)
+        self.main_frame.pack(pady=10, padx=10, fill="both", expand=True)
 
-        # Nút nhấn đẹp hơn
-        self.button = Button(control_frame, text="START / STOP", command=self.on_click, font=("Arial", 14, "bold"),
-                             bg="#27ae60", fg="white", activebackground="#2ecc71", activeforeground="white",
-                             relief="flat", padx=20, pady=5, bd=3)
-        self.button.pack(pady=5)
+        # **Cột bên trái: Chọn thùng**
+        self.left_frame = tk.Frame(self.main_frame)
+        self.left_frame.pack(side="left", padx=10, fill="y")
 
-        # Hiển thị trạng thái (màu thay đổi theo trạng thái)
-        self.label = Label(self, text="Stopped", font=("Arial", 12, "bold"), fg="red", bg="#2c3e50")
-        self.label.pack()
+        self.bin_label = tk.Label(self.left_frame, text="Chọn Thùng", font=("Arial", 12, "bold"))
+        self.bin_label.pack(pady=5)
 
-    def on_click(self):
-        self.running = not self.running
-        if self.running:
-            self.label.config(text="Running", fg="#2ecc71")  # Xanh lá khi chạy
-        else:
-            self.label.config(text="Stopped", fg="red")  # Đỏ khi dừng
+        self.selected_bin = tk.StringVar()
+        self.bin_combobox = ttk.Combobox(self.left_frame, values=self.bins, textvariable=self.selected_bin, state="readonly")
+        self.bin_combobox.pack()
+        self.bin_combobox.bind("<<ComboboxSelected>>", self.update_checkboxes)
+
+        # **Cột bên phải: Chọn loại quả**
+        self.right_frame = tk.Frame(self.main_frame)
+        self.right_frame.pack(side="right", padx=10, fill="both", expand=True)
+
+        self.fruit_label = tk.Label(self.right_frame, text="Chọn Loại Trái Cây", font=("Arial", 12, "bold"))
+        self.fruit_label.pack(pady=5)
+
+        self.checkbox_frame = tk.Frame(self.right_frame)
+        self.checkbox_frame.pack()
+
+        # Tạo các checkbox (ẩn ban đầu)
+        self.checkboxes = {fruit: tk.Checkbutton(self.checkbox_frame, text=fruit) for fruit in self.fruits}
+        for fruit, checkbox in self.checkboxes.items():
+            checkbox.pack(anchor="w")
+
+        # Nút xác nhận
+        self.button = tk.Button(self, text="Xác nhận", command=self.show_selected)
+        self.button.pack(pady=10)
+
+        # Label hiển thị kết quả
+        self.result_label = tk.Label(self, text="Chưa chọn thùng", font=("Arial", 12))
+        self.result_label.pack()
+
+    def update_checkboxes(self, event):
+        """Cập nhật checkbox khi chọn thùng"""
+        bin_name = self.selected_bin.get()
+        if not bin_name:
+            return
+
+        # Cập nhật trạng thái checkbox theo dữ liệu của thùng đã chọn
+        for fruit, checkbox in self.checkboxes.items():
+            checkbox.config(variable=self.bin_fruit_selection[bin_name][fruit])
+
+    def show_selected(self):
+        """Hiển thị loại trái cây đã chọn cho từng thùng"""
+        result_text = ""
+        for bin_name, fruit_selection in self.bin_fruit_selection.items():
+            selected_fruits = [fruit for fruit, var in fruit_selection.items() if var.get()]
+            result_text += f"{bin_name}: {', '.join(selected_fruits) if selected_fruits else 'Không có'}\n"
+
+        self.result_label.config(text=result_text)
 
 if __name__ == "__main__":
-    app = MyApp()
+    app = FruitStorageApp()
     app.mainloop()

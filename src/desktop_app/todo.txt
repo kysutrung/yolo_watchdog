@@ -10,9 +10,12 @@ Thêm code chạy yolov8 bản mặc định vào phần mềm
 =xong
 
 Gửi lệnh điều khiển esp32 dựa vào trạng thái của yolo
+=xong
 
 Làm màn hình chiếu hình ảnh của camera thu được tại máy tính xử lý trung tâm, chia màn hình thành các ô nhỏ để tiện cài đặt
 =xong
+
+Đặt app ở chế độ top mode để app luôn nằm trên cùng
 
 Hiệu chỉnh và đóng gói phần mềm sử dụng trọng số mặc định
 
