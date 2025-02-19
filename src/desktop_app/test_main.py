@@ -87,7 +87,7 @@ class MyApp(tk.Tk):
             ket_qua = model.predict(source=khung_hinh,
                                     conf=0.3, 
                                     device="cuda", 
-                                    classes=[41], 
+                                    classes=[0], 
                                     show=False)
             
             #đoạn này phân tích kết quả nhận diện
