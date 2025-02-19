@@ -87,7 +87,7 @@ class MyApp(tk.Tk):
             ket_qua = model.predict(source=khung_hinh,
                                     conf=0.3, 
                                     device="cuda", 
-                                    classes=[41], 
+                                    classes=[39], 
                                     show=False)
             
             #đoạn này phân tích kết quả nhận diện
@@ -105,7 +105,10 @@ class MyApp(tk.Tk):
                     y_tam = int((y1 + y2) / 2)
                     khu_vuc_vi_pham = xac_dinh_vi_tri_vat_the(x_tam, y_tam)
                     print("Phat hien vi pham tai khu vuc: " + str(khu_vuc_vi_pham))
-                    numbers[khu_vuc_vi_pham - 1] += 1
+                    if khu_vuc_vi_pham is not None:
+                        numbers[khu_vuc_vi_pham - 1] += 1
+                    else:
+                        print("Lỗi: khu_vuc_vi_pham có giá trị None")
                 
                 #gửi kết quả nhận diện qua bộ phát sóng
                 #đóng gói struct (8 số nguyên 4 byte)
