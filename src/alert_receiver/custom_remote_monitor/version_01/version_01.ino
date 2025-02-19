@@ -17,6 +17,8 @@ DataPacket packet;
 
 int soNhanDuoc[8];
 
+const int coiPin = 15;
+
 
 // Hàm callback khi nhận dữ liệu
 void OnDataRecv(const esp_now_recv_info_t *info, const uint8_t *incomingData, int len) {
@@ -78,6 +80,12 @@ void loop(){
     tft.print(soNhanDuoc[6]);
     tft.setCursor(210, 155);
     tft.print(soNhanDuoc[7]); 
+
+    for (int i = 0; i < 8; i++) {
+      if(soNhanDuoc[i] > 0){
+        tone(coiPin, 700, 100);
+      }
+    }
 
     delay(100);
 }
