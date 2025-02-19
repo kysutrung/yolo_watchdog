@@ -27,9 +27,6 @@ void OnDataRecv(const esp_now_recv_info_t *info, const uint8_t *incomingData, in
         soNhanDuoc[i] = packet.numbers[i];
       }
     }
-
-
- 
 }
 
 
@@ -49,7 +46,7 @@ void setup() {
   esp_now_register_recv_cb(OnDataRecv);
 
   tft.init();  // Khởi tạo màn hình
-  tft.setRotation(0);  // Đặt hướng màn hình (0, 90, 180, 270)
+  tft.setRotation(3);  // Đặt hướng màn hình (0, 90, 180, 270)
   tft.fillScreen(TFT_RED);  // Màu nền đen
   
 }
@@ -57,23 +54,30 @@ void setup() {
 void loop(){
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_WHITE);  // Màu chữ
-    tft.setTextSize(3);  // Kích thước chữ
+    tft.setTextSize(2);  // Kích thước chữ
     // Hiển thị số nhận được
-    tft.setCursor(60, 40);
-    tft.println(soNhanDuoc[0]);
-    tft.setCursor(80, 40);
-    tft.println(soNhanDuoc[1]);
-    tft.setCursor(100, 40);
-    tft.println(soNhanDuoc[2]);
-    tft.setCursor(120, 40);
-    tft.println(soNhanDuoc[3]);
-    tft.setCursor(60, 90);
-    tft.println(soNhanDuoc[4]);
-    tft.setCursor(80, 90);
-    tft.println(soNhanDuoc[5]);
-    tft.setCursor(100, 90);
-    tft.println(soNhanDuoc[6]);
-    tft.setCursor(120, 90);
-    tft.println(soNhanDuoc[7]);
+    tft.setCursor(20, 25);
+    tft.print("KV1  KV2  KV3  KV4");
+    tft.setCursor(30, 60);
+    tft.print(soNhanDuoc[0]);
+    tft.setCursor(90, 60);
+    tft.print(soNhanDuoc[1]);
+    tft.setCursor(150, 60);
+    tft.print(soNhanDuoc[2]);
+    tft.setCursor(210, 60);
+    tft.print(soNhanDuoc[3]);
+
+
+    tft.setCursor(20, 120);
+    tft.print("KV5  KV6  KV7  KV8");
+    tft.setCursor(30, 155);
+    tft.print(soNhanDuoc[4]);
+    tft.setCursor(90, 155);
+    tft.print(soNhanDuoc[5]);
+    tft.setCursor(150, 155);
+    tft.print(soNhanDuoc[6]);
+    tft.setCursor(210, 155);
+    tft.print(soNhanDuoc[7]); 
+
     delay(100);
 }
