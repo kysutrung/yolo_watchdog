@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Label, Button, Toplevel, Checkbutton, IntVar, StringVar, OptionMenu
+from tkinter import Label, Button, Toplevel, Listbox, MULTIPLE, Scrollbar
 from PIL import Image, ImageTk
 import threading
 import cv2
@@ -7,65 +7,45 @@ from ultralytics import YOLO
 import numpy as np
 import struct
 import serial
-import time
 
-#==========SETTING============================================
-model = YOLO("yolov8n.pt")  #trọng số
-hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
-ser = serial.Serial('COM10', 115200, timeout=1) #cổng cắm bộ phát tín hiệu
-#=============================================================
+#==========SETTING==========================================================
+model = YOLO("yolov8n.pt")  # Trọng số
+hinh_anh_dau_vao = cv2.VideoCapture(0)  # Camera
+ser = serial.Serial('COM10', 115200, timeout=1)  # Cổng cắm bộ phát tín hiệu
+#===========================================================================
 
-class SettingsWindow(Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.title("Cài Đặt")
-        self.geometry("350x200")
-        
-        Label(self, text="Chọn Khu Vực", font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=10)
-        self.selected_zone = StringVar(self)
-        self.selected_zone.set("Chọn")  # Giá trị mặc định
-        self.zone_menu = OptionMenu(self, self.selected_zone, "Khu vực 1", "Khu vực 2", "Khu vực 3", "Khu vực 4")
-        self.zone_menu.grid(row=0, column=1, padx=10, pady=10)
-        
-        Label(self, text="Thiết Lập Hạn Chế", font=("Arial", 10, "bold")).grid(row=1, column=1)
-        
-        self.restrict_bottle = IntVar()
-        self.restrict_person = IntVar()
-        self.restrict_phone = IntVar()
-        
-        Checkbutton(self, text="Chai nước", variable=self.restrict_bottle).grid(row=2, column=1, sticky='w')
-        Checkbutton(self, text="Người", variable=self.restrict_person).grid(row=3, column=1, sticky='w')
-        Checkbutton(self, text="Điện thoại", variable=self.restrict_phone).grid(row=4, column=1, sticky='w')
-        
-        Button(self, text="Xác nhận", command=self.save_settings).grid(row=5, column=1, pady=10)
-        
-        self.parent = parent
-    
-    def save_settings(self):
-        self.parent.settings['zone'] = self.selected_zone.get()
-        self.parent.settings['restrict_bottle'] = self.restrict_bottle.get()
-        self.parent.settings['restrict_person'] = self.restrict_person.get()
-        self.parent.settings['restrict_phone'] = self.restrict_phone.get()
-        print("Cài đặt lưu: ", self.parent.settings)
-        self.destroy()
+cac_doi_tuong_cam = ["bottle", "baseball bat", "cell phone", "knife"] #đối tượng cấm
+cai_dat_khu_vuc = [[] for _ in range(9)] #lưu cài đặt của 8 khu vực
+
+
+def xac_dinh_vi_tri_vat_the(x_center, y_center):
+    if x_center < 160 and y_center < 240:
+        return 1
+    elif x_center > 160 and x_center < 320 and y_center < 240:
+        return 2
+    elif x_center > 320 and x_center < 480 and y_center < 240:
+        return 3
+    elif x_center > 480 and x_center < 640 and y_center < 240:
+        return 4
+    elif x_center < 160 and y_center > 240:
+        return 5
+    elif x_center > 160 and x_center < 320 and y_center > 240:
+        return 6
+    elif x_center > 320 and x_center < 480 and y_center > 240:
+        return 7
+    elif x_center > 480 and x_center < 640 and y_center > 240:
+        return 8
 
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.running = False
         self.title("YOLO WatchDog Beta 1.0")
-        self.geometry("400x250")
-        
-        self.settings = {  # Lưu cài đặt
-            'zone': "",
-            'restrict_bottle': 0,
-            'restrict_person': 0,
-            'restrict_phone': 0
-        }
-        
+        self.geometry("400x400")
+
         # Logo
         self.logo_label = Label(self)
-        self.logo_label.pack()
+        self.logo_label.pack(pady=10)
         try:
             image = Image.open("logo_demo2.png")
             image = image.resize((380, 120))
@@ -73,26 +53,34 @@ class MyApp(tk.Tk):
             self.logo_label.config(image=self.logo)
         except:
             self.logo_label.config(text="(No Logo)")
-        
-        # Nút nhấn
-        self.button = Button(self, text="START / STOP", command=self.on_click)
-        self.button.pack(pady=(10, 5))
-        self.label = Label(self, text="Stopped", font=("Arial", 12))
+
+        self.label_chu_thich = Label(self, text="Settings", font=("Arial", 12, "bold"))
+        self.label_chu_thich.pack(pady=(10, 5))
+
+        # Khung chứa các nút khu vực
+        self.frame_khu_vuc = tk.Frame(self)
+        self.frame_khu_vuc.pack(pady=10)
+
+        # Tạo 8 nút khu vực
+        self.cac_nut_khu_vuc = []
+        for i in range(1, 9):
+            button = Button(self.frame_khu_vuc, text=f"Area {i}", command=lambda k=i: self.mo_cua_so_lua_chon(k))
+            button.grid(row=(i-1)//4, column=(i-1)%4, padx=5, pady=5)  
+            self.cac_nut_khu_vuc.append(button)
+
+        # Nút nhấn START/STOP
+        self.button = Button(self, text="START / STOP", font=("Arial", 10, "bold"), command=self.on_click)
+        self.button.pack(pady=(20,10))
+        self.label = Label(self, text="Stopped")
         self.label.pack()
-        
-        # Nút cài đặt
-        self.settings_button = Button(self, text="Cài Đặt", command=self.open_settings)
-        self.settings_button.pack(pady=5)
-        
+
         self.video_window = None
-    
-    def open_settings(self):
-        SettingsWindow(self)
-    
+
+    #nút start stop
     def on_click(self):
         self.running = not self.running
         self.label.config(text="Running" if self.running else "Stopped")
-        
+
         if self.running:
             self.video_window = Toplevel(self)
             self.video_window.title("Realtime Video")
@@ -104,7 +92,33 @@ class MyApp(tk.Tk):
             if self.video_window:
                 self.video_window.destroy()
                 self.video_window = None
-    
+
+    def mo_cua_so_lua_chon(self, khu_vuc):
+        cua_so_lua_chon = Toplevel(self)
+        cua_so_lua_chon.title(f"Banned Objects In Area {khu_vuc}")
+        cua_so_lua_chon.geometry("350x400")
+        
+        # Scrollbar dọc
+        scrollbar = Scrollbar(cua_so_lua_chon)
+        scrollbar.pack(side="right", fill="y")
+
+        # Listbox cho phép chọn nhiều đối tượng
+        listbox = Listbox(cua_so_lua_chon, selectmode=MULTIPLE)
+        for item in cac_doi_tuong_cam:
+            listbox.insert(tk.END, item)
+        listbox.pack(padx=10, pady=10, fill="both", expand=True)
+        
+        # Cấu hình scrollbar
+        scrollbar.config(command=listbox.yview)
+
+        def xac_nhan_lua_chon():
+            cai_dat_khu_vuc[khu_vuc].extend(cac_doi_tuong_cam[i] for i in listbox.curselection())
+            cua_so_lua_chon.destroy()
+
+        # Nút xác nhận
+        button_xac_nhan = Button(cua_so_lua_chon, text="CONFIRM", command=xac_nhan_lua_chon)
+        button_xac_nhan.pack(pady=10)
+
     def yolo_watchdog(self):
         while self.running:
             # Bắt đầu thu thập hình ảnh
@@ -113,31 +127,55 @@ class MyApp(tk.Tk):
                 break
             
             # Khởi tạo nhận diện hình ảnh
-            ket_qua = model.predict(source=khung_hinh, conf=0.3, device="cuda", show=False)
+            ket_qua = model.predict(source=khung_hinh,
+                                    conf=0.3, 
+                                    device="cuda", 
+                                    classes=[39], 
+                                    show=False)
             
-            # Kiểm tra cài đặt hạn chế
-            restricted_classes = []
-            if self.settings['restrict_bottle']:
-                restricted_classes.append(39)  # Chai nước
-            if self.settings['restrict_person']:
-                restricted_classes.append(0)   # Người
-            if self.settings['restrict_phone']:
-                restricted_classes.append(67)  # Điện thoại
-            
+            # Đoạn này phân tích kết quả nhận diện
             for vat_the in ket_qua:
+                numbers = [0] * 8
+
                 for box in vat_the.boxes:
-                    id_vat_the = int(box.cls.cpu().numpy())
-                    if id_vat_the in restricted_classes:
-                        print("Phát hiện vi phạm:", vat_the.names[id_vat_the])
-            
+                    id_vat_the = int(box.cls.cpu().numpy())  
+                    ten_vat_the = vat_the.names[id_vat_the]  
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                    x_tam = int((x1 + x2) / 2)
+                    y_tam = int((y1 + y2) / 2)
+                    khu_vuc_vi_pham = xac_dinh_vi_tri_vat_the(x_tam, y_tam)
+                    print("Phát hiện vi phạm tại khu vực: " + str(khu_vuc_vi_pham))
+                    if khu_vuc_vi_pham is not None:
+                        if ten_vat_the in cai_dat_khu_vuc[khu_vuc_vi_pham]:
+                            numbers[khu_vuc_vi_pham - 1] += 1
+                            
+                        
+                
+                # Gửi kết quả nhận diện qua bộ phát sóng
+                data = struct.pack('8i', *numbers)
+                ser.write(data)
+                print("Đã gửi dữ liệu:", numbers)
+
+            # Đoạn này vẽ lưới ô và đánh số ô
+            h, w, _ = khung_hinh.shape
+            for i in range(1, 4):
+                cv2.line(khung_hinh, (w * i // 4, 0), (w * i // 4, h), (0, 255, 0), 2)
+            for i in range(1, 2):
+                cv2.line(khung_hinh, (0, h * i // 2), (w, h * i // 2), (0, 255, 0), 2)
+
+            for i in range(4):
+                for j in range(2):
+                    cv2.putText(khung_hinh, str(i + j * 4 + 1), (w * i // 4 + 10, h * j // 2 + 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
             # Hiển thị hình ảnh realtime
             khung_hinh = cv2.cvtColor(khung_hinh, cv2.COLOR_BGR2RGB)
             khung_hinh = Image.fromarray(khung_hinh)
             khung_hinh = ImageTk.PhotoImage(image=khung_hinh)
-            
+
             self.video_label.config(image=khung_hinh)
             self.video_label.image = khung_hinh
-            
+
             if not self.running:
                 break
         

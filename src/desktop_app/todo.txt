@@ -1,5 +1,5 @@
 Tạo ra được một giao diện với nút bấm và dòng chữ hiển thị thông báo trạng thái chạy của phần mềm?
-=tạm xong
+=xong
 
 Điều khiển esp32 bật tắt 1 đèn led bằng laptop để test
 (gặp lỗi không thể giữ trạng thái điều khiển esp qua usb - đãđã fix)
