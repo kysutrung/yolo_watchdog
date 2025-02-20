@@ -9,9 +9,9 @@ import struct
 import serial
 
 #==========SETTING==========================================================
-model = YOLO("yolov8n.pt")  # Trọng số
-hinh_anh_dau_vao = cv2.VideoCapture(0)  # Camera
-ser = serial.Serial('COM10', 115200, timeout=1)  # Cổng cắm bộ phát tín hiệu
+model = YOLO("yolov8n.pt")  #trọng số
+hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
+ser = serial.Serial('COM10', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
 #===========================================================================
 
 cac_doi_tuong_cam = ["bottle", "baseball bat", "cell phone", "knife"] #đối tượng cấm
@@ -43,7 +43,7 @@ class MyApp(tk.Tk):
         self.title("YOLO WatchDog Beta 2.0")
         self.geometry("400x400")
 
-        # Logo
+        #logo
         self.logo_label = Label(self)
         self.logo_label.pack(pady=10)
         try:
@@ -57,18 +57,18 @@ class MyApp(tk.Tk):
         self.label_chu_thich = Label(self, text="Settings", font=("Arial", 12, "bold"))
         self.label_chu_thich.pack(pady=(10, 5))
 
-        # Khung chứa các nút khu vực
+        #khung chứa các nút khu vực cho ngay ngắn đẹp
         self.frame_khu_vuc = tk.Frame(self)
         self.frame_khu_vuc.pack(pady=10)
 
-        # Tạo 8 nút khu vực
+        #8 nút khu vực
         self.cac_nut_khu_vuc = []
         for i in range(1, 9):
             button = Button(self.frame_khu_vuc, text=f"Area {i}", command=lambda k=i: self.mo_cua_so_lua_chon(k))
             button.grid(row=(i-1)//4, column=(i-1)%4, padx=5, pady=5)  
             self.cac_nut_khu_vuc.append(button)
 
-        # Nút nhấn START/STOP
+        #nút nhấn START/STOP
         self.button = Button(self, text="START / STOP", font=("Arial", 10, "bold"), command=self.on_click)
         self.button.pack(pady=(20,10))
         self.label = Label(self, text="Stopped")
@@ -76,7 +76,7 @@ class MyApp(tk.Tk):
 
         self.video_window = None
 
-    #nút start stop
+    #nút start + stop
     def on_click(self):
         self.running = not self.running
         self.label.config(text="Running" if self.running else "Stopped")
@@ -92,48 +92,49 @@ class MyApp(tk.Tk):
             if self.video_window:
                 self.video_window.destroy()
                 self.video_window = None
-
+    
+    #cửa sổ lựa chọn đối tượng
     def mo_cua_so_lua_chon(self, khu_vuc):
         cua_so_lua_chon = Toplevel(self)
         cua_so_lua_chon.title(f"Banned Objects In Area {khu_vuc}")
         cua_so_lua_chon.geometry("350x400")
         
-        # Scrollbar dọc
+        #scrollbar
         scrollbar = Scrollbar(cua_so_lua_chon)
         scrollbar.pack(side="right", fill="y")
 
-        # Listbox cho phép chọn nhiều đối tượng
+        #listbox
         listbox = Listbox(cua_so_lua_chon, selectmode=MULTIPLE)
         for item in cac_doi_tuong_cam:
             listbox.insert(tk.END, item)
         listbox.pack(padx=10, pady=10, fill="both", expand=True)
         
-        # Cấu hình scrollbar
+        #cấu hình scrollbar
         scrollbar.config(command=listbox.yview)
 
         def xac_nhan_lua_chon():
             cai_dat_khu_vuc[khu_vuc].extend(cac_doi_tuong_cam[i] for i in listbox.curselection())
             cua_so_lua_chon.destroy()
 
-        # Nút xác nhận
+        #nút xác nhận
         button_xac_nhan = Button(cua_so_lua_chon, text="CONFIRM", command=xac_nhan_lua_chon)
         button_xac_nhan.pack(pady=10)
 
     def yolo_watchdog(self):
         while self.running:
-            # Bắt đầu thu thập hình ảnh
+            #bắt đầu thu thập hình ảnh
             doc_thanh_cong, khung_hinh = hinh_anh_dau_vao.read()
             if not doc_thanh_cong:
                 break
             
-            # Khởi tạo nhận diện hình ảnh
+            #khởi tạo nhận diện hình ảnh
             ket_qua = model.predict(source=khung_hinh,
                                     conf=0.3, 
                                     device="cuda", 
                                     classes=[39, 43, 67, 0], 
                                     show=False)
             
-            # Đoạn này phân tích kết quả nhận diện
+            #đoạn này phân tích kết quả nhận diện
             for vat_the in ket_qua:
                 numbers = [0] * 8
 
@@ -151,12 +152,12 @@ class MyApp(tk.Tk):
                             
                         
                 
-                # Gửi kết quả nhận diện qua bộ phát sóng
+                #gửi kết quả nhận diện qua bộ phát sóng
                 data = struct.pack('8i', *numbers)
                 ser.write(data)
                 print("Đã gửi dữ liệu:", numbers)
 
-            # Đoạn này vẽ lưới ô và đánh số ô
+            #đoạn này vẽ lưới ô và đánh số ô
             h, w, _ = khung_hinh.shape
             for i in range(1, 4):
                 cv2.line(khung_hinh, (w * i // 4, 0), (w * i // 4, h), (0, 255, 0), 2)
@@ -168,7 +169,7 @@ class MyApp(tk.Tk):
                     cv2.putText(khung_hinh, str(i + j * 4 + 1), (w * i // 4 + 10, h * j // 2 + 30),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-            # Hiển thị hình ảnh realtime
+            #hiển thị hình ảnh realtime
             khung_hinh = cv2.cvtColor(khung_hinh, cv2.COLOR_BGR2RGB)
             khung_hinh = Image.fromarray(khung_hinh)
             khung_hinh = ImageTk.PhotoImage(image=khung_hinh)
