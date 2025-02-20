@@ -42,9 +42,9 @@ __Remote Monitor Unit__
 - [ ] Expansion port
 
 __Window PC App (ESP NOW UNIT needed)__
-- [ ] Whole system work right in Windows OS
-- [ ] Control UI
-- [ ] Display images processed
+- [x] Whole system work right in Windows OS
+- [x] Control UI
+- [x] Display realtime video
 
 ## 📥 Installation Guide
 ### 1. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install requirement libraries. Check if pip is installed, install if not.
