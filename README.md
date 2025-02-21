@@ -38,6 +38,7 @@ __Image Processing Unit__
 __Remote Monitor Unit__
 - [x] Receive notification via ESP NOW
 - [x] Alert depend on setting
+- [ ] Make a good looking UI using SquareLine Studio
 - [ ] Notification history
 - [ ] Expansion port
 
