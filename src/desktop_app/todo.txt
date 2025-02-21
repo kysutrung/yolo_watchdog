@@ -19,6 +19,10 @@ Làm màn hình chiếu hình ảnh của camera thu được tại máy tính x
 
 Thêm nút chọn dark mode / light mode
 
+Cơ chế báo mất kết nối
+
+Nâng cấp cơ chế thêm sửa xóa đối tượng quy định ở từng ôô
+
 Hiệu chỉnh và đóng gói phần mềm sử dụng trọng số mặc định
 
 Làm dataset và train mô hình đặc thù phục vụ nhà máy công trường.....
