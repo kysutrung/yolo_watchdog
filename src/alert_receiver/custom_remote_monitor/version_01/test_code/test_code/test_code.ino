@@ -7,9 +7,6 @@
 //3.3V    ->BLK
 //CÒI -> GPIO 15
 //NÚT BẤM
-//TRÊN -> GPIO 32
-//DƯỚI -> GPIo 25
-//GIỮA -> GPIO 33
 //=================================
 
 #include <TFT_eSPI.h>  // Thư viện TFT_eSPI
@@ -23,20 +20,36 @@ typedef struct {
 
 DataPacket packet;
 
-int soNhanDuoc[8];
-
+//GLOBAL VAR
 const int coiPin = 15;
+const int nutMot = 25;
+const int nutHai = 33;
+const int nutBa = 32;
+
+bool trangThaiNut1Truoc = HIGH;
+bool trangThaiNut2Truoc = HIGH;
+bool trangThaiNut3Truoc = HIGH;
+
+bool thayDoi = 0;
+
+int soNhanDuoc[] = {0, 0, 0, 0, 0, 0, 0, 0};
+int soNhanDuocCuoi[] = {3, 3, 3, 3, 3, 3, 3, 3};
+
+int MENU_MODE = 1;
+int TRANG_THAI_COI = 1;
+int TRANG_THAI_COI_CUOI = 3;
+int BIEN_NHO_HUONG_DAN = 0;
 
 
 // Hàm callback khi nhận dữ liệu
 void OnDataRecv(const esp_now_recv_info_t *info, const uint8_t *incomingData, int len) {
-    memcpy(&packet, incomingData, sizeof(packet));
-    Serial.print("Nhận được dữ liệu: ");
-    for (int i = 0; i < 8; i++) {
-      if(packet.numbers[i] != soNhanDuoc[i]){
-        soNhanDuoc[i] = packet.numbers[i];
-      }
+  memcpy(&packet, incomingData, sizeof(packet));
+  Serial.print("Nhận được dữ liệu: ");
+  for (int i = 0; i < 8; i++){
+    if(packet.numbers[i] != soNhanDuoc[i]){
+      soNhanDuoc[i] = packet.numbers[i];
     }
+  }
 }
 
 void datMauChu(int numA){
@@ -48,28 +61,26 @@ void datMauChu(int numA){
   }
 }
 
-//MAIN
-void setup() {
-  Serial.begin(115200);
-
-  // Đặt ESP32 vào chế độ Wi-Fi Station
-  WiFi.mode(WIFI_STA);
-
-  // Khởi tạo ESP-NOW
-  if (esp_now_init() != ESP_OK) {
-
+void coiCanhBao(){
+  for (int i = 0; i < 8; i++) {
+    if(soNhanDuoc[i] > 0 && TRANG_THAI_COI == 1){
+      tone(coiPin, 700, 100);
+    }
   }
-
-  // Đăng ký callback khi nhận dữ liệu
-  esp_now_register_recv_cb(OnDataRecv);
-
-  tft.init();  // Khởi tạo màn hình
-  tft.setRotation(3);  // Đặt hướng màn hình (0, 90, 180, 270)
-  tft.fillScreen(TFT_RED);  // Màu nền đen
-  
 }
 
-void loop(){
+void xemCanhBao(){
+  for(int u = 0; u < 8; u++){
+    if(soNhanDuocCuoi[u] != soNhanDuoc[u]){
+      thayDoi = 1;
+    }
+  }
+
+  if(TRANG_THAI_COI_CUOI != TRANG_THAI_COI){
+    thayDoi = 1;
+  }
+
+  if(thayDoi){
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_WHITE);  // Màu chữ
     tft.setTextSize(2);  // Kích thước chữ
@@ -104,17 +115,115 @@ void loop(){
     tft.print(soNhanDuoc[6]);
     datMauChu(soNhanDuoc[7]);
     tft.setCursor(210, 155);
-    tft.print(soNhanDuoc[7]); 
+    tft.print(soNhanDuoc[7]);
 
-    for (int i = 0; i < 8; i++) {
-      if(soNhanDuoc[i] > 0){
-        tone(coiPin, 700, 100);
-      }
+    tft.setCursor(30, 200);
+    if(TRANG_THAI_COI == 1){
+      tft.setTextColor(TFT_WHITE);
+      tft.print("AM THANH: BAT");
+    }
+    else if(TRANG_THAI_COI == 2){
+      tft.setTextColor(TFT_BLUE);
+      tft.print("AM THANH: TAT");
     }
 
-    tft.setTextColor(TFT_BLUE);
-    tft.setCursor(100, 210);
-    tft.print("BETA 1.0");
 
-    delay(100);
+    for (int i = 0; i < 8; i++) {
+      soNhanDuocCuoi[i] = soNhanDuoc[i];
+    }
+
+    TRANG_THAI_COI_CUOI = TRANG_THAI_COI;
+    thayDoi = 0;
+  }
+
+  BIEN_NHO_HUONG_DAN = 0;
+  coiCanhBao();
+}
+
+void huongDan(){
+  if(BIEN_NHO_HUONG_DAN == 0){
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextColor(TFT_WHITE);  // Màu chữ
+    tft.setTextSize(2);  // Kích thước chữ
+    // Hiển thị số nhận được
+    tft.setCursor(20, 25);
+    tft.print("Huong Dan ------>");
+    tft.setCursor(20, 110);
+    tft.print("Thong Bao ------>");
+    tft.setCursor(20, 200);
+    tft.print("Bat/Tat Coi ---->");
+    BIEN_NHO_HUONG_DAN = 3;
+    thayDoi = 1;
+  }
+}
+
+void hienThiManHinh(){
+  if(MENU_MODE == 2){
+    xemCanhBao();
+  }
+  else{
+    huongDan();
+  }
+}
+
+
+void nhanNut() {
+  int trangThaiNut1 = digitalRead(nutMot);
+  int trangThaiNut2 = digitalRead(nutHai);
+  int trangThaiNut3 = digitalRead(nutBa);
+
+  if (trangThaiNut1 == LOW && trangThaiNut1Truoc == HIGH) {
+    if (digitalRead(nutMot) == LOW) {
+      MENU_MODE = 1;
+    }
+  }
+
+  if (trangThaiNut2 == LOW && trangThaiNut2Truoc == HIGH) {
+    if (digitalRead(nutHai) == LOW) {
+      MENU_MODE = 2;
+    }
+  }
+
+  if (trangThaiNut3 == LOW && trangThaiNut3Truoc == HIGH) {
+    if (digitalRead(nutBa) == LOW) {
+      TRANG_THAI_COI++;
+      if(TRANG_THAI_COI > 2){
+        TRANG_THAI_COI = 1;
+      }
+    }
+  }
+
+  trangThaiNut1Truoc = trangThaiNut1;
+  trangThaiNut2Truoc = trangThaiNut2;
+  trangThaiNut3Truoc = trangThaiNut3;
+}
+
+//MAIN
+void setup() {
+  Serial.begin(115200);
+
+  // Đặt ESP32 vào chế độ Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  // Khởi tạo ESP-NOW
+  if (esp_now_init() != ESP_OK) {
+
+  }
+
+  // Đăng ký callback khi nhận dữ liệu
+  esp_now_register_recv_cb(OnDataRecv);
+
+  tft.init();  // Khởi tạo màn hình
+  tft.setRotation(0);  // Đặt hướng màn hình (0, 90, 180, 270)
+  tft.fillScreen(TFT_RED);  // Màu nền đen
+  
+  pinMode(coiPin, OUTPUT);
+  pinMode(nutMot, INPUT_PULLUP);
+  pinMode(nutHai, INPUT_PULLUP);
+  pinMode(nutBa, INPUT_PULLUP);
+}
+
+void loop(){
+  nhanNut();
+  hienThiManHinh();
 }
