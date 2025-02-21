@@ -127,7 +127,8 @@ void xemCanhBao(){
       tft.print("AM THANH: TAT");
     }
 
-
+    coiCanhBao();
+    
     for (int i = 0; i < 8; i++) {
       soNhanDuocCuoi[i] = soNhanDuoc[i];
     }
@@ -137,7 +138,6 @@ void xemCanhBao(){
   }
 
   BIEN_NHO_HUONG_DAN = 0;
-  coiCanhBao();
 }
 
 void huongDan(){
