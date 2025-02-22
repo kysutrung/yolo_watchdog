@@ -38,14 +38,19 @@ __Image Processing Unit__
 __Remote Monitor Unit__
 - [x] Receive notification via ESP NOW
 - [x] Alert depend on setting
-- [ ] Make a good looking UI using SquareLine Studio
+- [ ] Good looking UI using SquareLine Studio
 - [ ] Notification history
 - [ ] Expansion port
+- [ ] Connection lost notification 
 
 __Window PC App (ESP NOW UNIT needed)__
 - [x] Whole system work right in Windows OS
 - [x] Control UI
 - [x] Display realtime video
+- [x] Select prohibited objects in each area
+- [ ] Running with every PC
+
+
 
 ## 📥 Installation Guide
 ### 1. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install requirement libraries. Check if pip is installed, install if not.
