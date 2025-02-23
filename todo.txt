@@ -1,3 +1,7 @@
+TODO
+
+DESKTOP APP================
+
 Tạo ra được một giao diện với nút bấm và dòng chữ hiển thị thông báo trạng thái chạy của phần mềm?
 =xong
 
@@ -28,3 +32,7 @@ Hiệu chỉnh và đóng gói phần mềm sử dụng trọng số mặc đị
 Làm dataset và train mô hình đặc thù phục vụ nhà máy công trường.....
 
 Hiệu chỉnh và đóng gói phần mềm sử dụng trọng số tự làm
+
+GENERAL ===================================================
+
+Thêm chương trình thử nghiệm khoảng cách xa nhất ESP NOW
