@@ -37,6 +37,12 @@ GENERAL ===================================================
 
 Thêm chương trình thử nghiệm khoảng cách xa nhất ESP NOW
 
+Hướng phát triển ============================================
+
 Thêm ra lệnh giọng nói
 
-Sử dụng nhiều cam
+Sử dụng nhiều camẻra
+
+Phát hiện hàng lỗi - QC
+
+Phát hiện dị vật ở mặt hàng in
