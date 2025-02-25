@@ -36,3 +36,7 @@ Hiệu chỉnh và đóng gói phần mềm sử dụng trọng số tự làm
 GENERAL ===================================================
 
 Thêm chương trình thử nghiệm khoảng cách xa nhất ESP NOW
+
+Thêm ra lệnh giọng nói
+
+Sử dụng nhiều cam
