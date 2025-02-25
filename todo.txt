@@ -44,5 +44,6 @@ Thêm ra lệnh giọng nói
 Sử dụng nhiều camẻra
 
 Phát hiện hàng lỗi ở quy trình đóng gói hoặc sản xuất cụ thể - QC
+(VÍ DỤ: Sản xuất nước đóng chai - Nắp chai, dị vật(gián, ruồi), nhãn, fill)
 
 Phát hiện dị vật ở mặt hàng in
