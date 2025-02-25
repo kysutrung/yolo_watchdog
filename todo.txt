@@ -43,6 +43,6 @@ Thêm ra lệnh giọng nói
 
 Sử dụng nhiều camẻra
 
-Phát hiện hàng lỗi - QC
+Phát hiện hàng lỗi ở quy trình đóng gói hoặc sản xuất cụ thể - QC
 
 Phát hiện dị vật ở mặt hàng in
