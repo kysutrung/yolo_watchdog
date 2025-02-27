@@ -5,23 +5,6 @@ Thử nghiệm khoảng cách xa nhất của sóng ESP NOW
 
 DESKTOP APP================
 
-Tạo ra được một giao diện với nút bấm và dòng chữ hiển thị thông báo trạng thái chạy của phần mềm?
-=xong
-
-Điều khiển esp32 bật tắt 1 đèn led bằng laptop để test
-(gặp lỗi không thể giữ trạng thái điều khiển esp qua usb - đãđã fix)
-=xong
-
-Thêm code chạy yolov8 bản mặc định vào phần mềm
-(gặp lỗi chạy được khoảng 45 giây thì bị crash chương trình khi chạy với cpu - chưa fix)
-=xong
-
-Gửi lệnh điều khiển esp32 dựa vào trạng thái của yolo
-=xong
-
-Làm màn hình chiếu hình ảnh của camera thu được tại máy tính xử lý trung tâm, chia màn hình thành các ô nhỏ để tiện cài đặt
-=xong
-
 Đặt app ở chế độ top mode để app luôn nằm trên cùng
 
 Thêm nút chọn dark mode / light mode
