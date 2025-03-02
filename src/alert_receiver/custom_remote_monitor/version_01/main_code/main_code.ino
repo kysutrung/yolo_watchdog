@@ -1,14 +1,3 @@
-//==========SƠ ĐỒ ĐẤU NỐI=========
-//TFT ST7798
-//GPIO 14 ->SCK
-//GPIO 13 ->SDA
-//GPIO 4  ->RES
-//GPIO 21 ->DC
-//3.3V    ->BLK
-//CÒI -> GPIO 15
-//NÚT BẤM
-//=================================
-
 #include <TFT_eSPI.h>  // Thư viện TFT_eSPI
 TFT_eSPI tft = TFT_eSPI();  // Khởi tạo đối tượng TFT
 #include <esp_now.h>
