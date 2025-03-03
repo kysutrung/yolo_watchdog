@@ -21,6 +21,9 @@ typedef struct {
 DataPacket packet;
 
 //GLOBAL VAR
+unsigned long lastReceiveTime = 0;
+const unsigned long timeout = 3000; // 5 giây
+
 const int coiPin = 15;
 const int nutMot = 25;
 const int nutHai = 33;
@@ -36,7 +39,7 @@ int soNhanDuoc[] = {0, 0, 0, 0, 0, 0, 0, 0};
 int soNhanDuocCuoi[] = {3, 3, 3, 3, 3, 3, 3, 3};
 
 int MENU_MODE = 1;
-int TRANG_THAI_COI = 1;
+int TRANG_THAI_COI = 2;
 int TRANG_THAI_COI_CUOI = 3;
 int BIEN_NHO_HUONG_DAN = 0;
 
@@ -50,6 +53,8 @@ void OnDataRecv(const esp_now_recv_info_t *info, const uint8_t *incomingData, in
       soNhanDuoc[i] = packet.numbers[i];
     }
   }
+
+  lastReceiveTime = millis();
 }
 
 void datMauChu(int numA){
@@ -64,7 +69,7 @@ void datMauChu(int numA){
 void coiCanhBao(){
   for (int i = 0; i < 8; i++) {
     if(soNhanDuoc[i] > 0 && TRANG_THAI_COI == 1){
-      tone(coiPin, 700, 100);
+      tone(coiPin, 500, 100);
     }
   }
 }
@@ -80,51 +85,60 @@ void xemCanhBao(){
     thayDoi = 1;
   }
 
+  if(millis() - lastReceiveTime > timeout){
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextColor(TFT_RED);  // Màu chữ
+    tft.setTextSize(2);  // Kích thước chữ
+    // Hiển thị số nhận được
+    tft.setCursor(12, 100);
+    tft.print("MAT KET NOI!!!!!!!");
+  }
+
   if(thayDoi){
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_WHITE);  // Màu chữ
     tft.setTextSize(2);  // Kích thước chữ
     // Hiển thị số nhận được
-    tft.setCursor(20, 25);
+    tft.setCursor(12, 25);
     tft.print("KV1  KV2  KV3  KV4");
 
     datMauChu(soNhanDuoc[0]);
-    tft.setCursor(30, 60);
+    tft.setCursor(20, 60);
     tft.print(soNhanDuoc[0]);
     datMauChu(soNhanDuoc[1]);
-    tft.setCursor(90, 60);
+    tft.setCursor(80, 60);
     tft.print(soNhanDuoc[1]);
     datMauChu(soNhanDuoc[2]);
-    tft.setCursor(150, 60);
+    tft.setCursor(140, 60);
     tft.print(soNhanDuoc[2]);
     datMauChu(soNhanDuoc[3]);
-    tft.setCursor(210, 60);
+    tft.setCursor(200, 60);
     tft.print(soNhanDuoc[3]);
 
     tft.setTextColor(TFT_WHITE);
-    tft.setCursor(20, 120);
+    tft.setCursor(12, 120);
     tft.print("KV5  KV6  KV7  KV8");
     datMauChu(soNhanDuoc[4]);
-    tft.setCursor(30, 155);
+    tft.setCursor(20, 155);
     tft.print(soNhanDuoc[4]);
     datMauChu(soNhanDuoc[5]);
-    tft.setCursor(90, 155);
+    tft.setCursor(80, 155);
     tft.print(soNhanDuoc[5]);
     datMauChu(soNhanDuoc[6]);
-    tft.setCursor(150, 155);
+    tft.setCursor(140, 155);
     tft.print(soNhanDuoc[6]);
     datMauChu(soNhanDuoc[7]);
-    tft.setCursor(210, 155);
+    tft.setCursor(200, 155);
     tft.print(soNhanDuoc[7]);
 
-    tft.setCursor(30, 200);
+    tft.setCursor(40, 210);
     if(TRANG_THAI_COI == 1){
       tft.setTextColor(TFT_WHITE);
-      tft.print("AM THANH: BAT");
+      tft.print("Am Thanh: Bat");
     }
     else if(TRANG_THAI_COI == 2){
       tft.setTextColor(TFT_BLUE);
-      tft.print("AM THANH: TAT");
+      tft.print("Am Thanh: Tat");
     }
 
     coiCanhBao();
@@ -147,10 +161,10 @@ void huongDan(){
     tft.setTextSize(2);  // Kích thước chữ
     // Hiển thị số nhận được
     tft.setCursor(20, 25);
-    tft.print("Huong Dan ------>");
+    tft.print("Chi Dan ------>");
     tft.setCursor(20, 110);
     tft.print("Thong Bao ------>");
-    tft.setCursor(20, 200);
+    tft.setCursor(20, 195);
     tft.print("Bat/Tat Coi ---->");
     BIEN_NHO_HUONG_DAN = 3;
     thayDoi = 1;
