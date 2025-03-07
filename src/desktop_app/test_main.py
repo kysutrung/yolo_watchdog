@@ -42,6 +42,8 @@ class MyApp(tk.Tk):
         self.running = False
         self.title("YOLO WatchDog Beta 2.0")
         self.geometry("400x400")
+        self.attributes("-topmost", True)
+        self.configure(bg="lightblue")
 
         #logo
         self.logo_label = Label(self)
