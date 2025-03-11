@@ -7,7 +7,7 @@ Làm dataset và train mô hình đặc thù phục vụ nhà máy công trườ
 
 DESKTOP APP================
 
-Thêm chức năng ra lệnh giọng nói
+Thêm chức năng ra lệnh giọng nói(tạo thêm 3 mảng tương ứng với 3 đối tượng phát hiện ở đâu)
 
 Thêm một bản phần mềm dùng được với nhiều cam single cam + multi camera
 

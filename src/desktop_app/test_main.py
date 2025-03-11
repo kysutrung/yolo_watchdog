@@ -21,6 +21,8 @@ ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hi
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
 cai_dat_khu_vuc = [[] for _ in range(9)] #lưu cài đặt của 8 khu vực
 
+#========VOICE=============================
+
 def speech_to_text():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -58,11 +60,14 @@ def text_to_speech(text):
         print(f"Lỗi khi phát âm thanh: {e}")
 
 def voice_commandz():
-    while True:
+    global voice_command_running
+    while voice_command_running:
         text = speech_to_text()
         if text:
             response = process_command(text)
             text_to_speech(response)
+
+#=============YOLO============================
 
 def xac_dinh_vi_tri_vat_the(x_center, y_center):
     if x_center < 160 and y_center < 240:
@@ -87,8 +92,8 @@ class MyApp(tk.Tk):
         super().__init__()
         self.running = False
         self.title("YOLO WatchDog Beta 2.0")
-        self.geometry("400x400")
-        self.attributes("-topmost", True)
+        self.geometry("400x450")
+        # self.attributes("-topmost", True)
         # self.configure(bg="yellow")
 
         #logo
@@ -122,8 +127,28 @@ class MyApp(tk.Tk):
         self.label = Label(self, text="Stopped")
         self.label.pack()
 
-        self.video_window = None
+        #thêm nút bật tắt giọng nói
+        self.voice_button = Button(self, text="VOICE COMMAND", font=("Arial", 10, "bold"), command=self.toggle_voice_command)
+        self.voice_button.pack(pady=(10,10))
+        global voice_command_running
+        voice_command_running = False #biến toàn cục để điều khiển luồng giọng nói
+        self.voice_status_label = Label(self, text="Inactive")
+        self.voice_status_label.pack()
 
+        self.video_window = None
+        
+    #nút bật tắt giọng nói
+    def toggle_voice_command(self):
+        global voice_command_running
+        voice_command_running = not voice_command_running
+        
+        if voice_command_running:
+            self.voice_status_label.config(text="Active")
+            self.voice_thread = threading.Thread(target=voice_commandz, daemon=True)
+            self.voice_thread.start()
+        else:
+            self.voice_status_label.config(text="Inactive")
+            
     #nút start + stop
     def on_click(self):
         self.running = not self.running
@@ -211,7 +236,7 @@ class MyApp(tk.Tk):
                 cv2.line(khung_hinh, (w * i // 4, 0), (w * i // 4, h), (0, 255, 0), 2)
             for i in range(1, 2):
                 cv2.line(khung_hinh, (0, h * i // 2), (w, h * i // 2), (0, 255, 0), 2)
-
+            #add text vào khung hình
             for i in range(4):
                 for j in range(2):
                     cv2.putText(khung_hinh, str(i + j * 4 + 1), (w * i // 4 + 10, h * j // 2 + 30),
