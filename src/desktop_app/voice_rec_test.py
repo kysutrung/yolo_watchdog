@@ -1,6 +1,6 @@
 import speech_recognition as sr
 from gtts import gTTS
-import playsound
+import pygame
 import os
 
 def speech_to_text():
@@ -18,16 +18,24 @@ def speech_to_text():
 
 def process_command(text):
     if text.lower() == "tìm người":
-        return "phát hiện người ở khu vực 1 2 4"
+        return "phát hiện người ở khu vực 2 4 6"
     else:
         return "He he he"
 
 def text_to_speech(text):
     try:
         output = gTTS(text, lang="vi", slow=False)
-        output.save("output.mp3")
-        playsound.playsound('output.mp3', True)
-        os.remove("output.mp3")
+        filename = "output.mp3"
+        output.save(filename)
+        
+        pygame.mixer.init()
+        pygame.mixer.music.load(filename)
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
+        pygame.quit()
+        
+        os.remove(filename)
     except Exception as e:
         print(f"Lỗi khi phát âm thanh: {e}")
 
