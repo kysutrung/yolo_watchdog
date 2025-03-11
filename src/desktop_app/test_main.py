@@ -7,6 +7,10 @@ from ultralytics import YOLO
 import numpy as np
 import struct
 import serial
+import speech_recognition as sr
+from gtts import gTTS
+import pygame
+import os
 
 #==========SETTING==========================================================
 model = YOLO("yolov8n.pt")  #trọng số
@@ -17,6 +21,48 @@ ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hi
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
 cai_dat_khu_vuc = [[] for _ in range(9)] #lưu cài đặt của 8 khu vực
 
+def speech_to_text():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        text_to_speech("Xin mời nói")
+        audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio, language="vi-VI")
+            print("Nghe được: {}".format(text))
+            return text
+        except Exception as e:
+            print(f"Không nhận dạng được giọng nói! Lỗi: {e}")
+            return None
+
+def process_command(text):
+    if text.lower() == "tìm người":
+        return "phát hiện người ở khu vực 2 4 6"
+    else:
+        return "He he he"
+
+def text_to_speech(text):
+    try:
+        output = gTTS(text, lang="vi", slow=False)
+        filename = "output.mp3"
+        output.save(filename)
+        
+        pygame.mixer.init()
+        pygame.mixer.music.load(filename)
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
+        pygame.quit()
+        
+        os.remove(filename)
+    except Exception as e:
+        print(f"Lỗi khi phát âm thanh: {e}")
+
+def voice_commandz():
+    while True:
+        text = speech_to_text()
+        if text:
+            response = process_command(text)
+            text_to_speech(response)
 
 def xac_dinh_vi_tri_vat_the(x_center, y_center):
     if x_center < 160 and y_center < 240:
