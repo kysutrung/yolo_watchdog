@@ -16,10 +16,13 @@ import os
 model = YOLO("yolov8n.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
 ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
-#===========================================================================
 
+#==========GLOBAL_VAR==================================================
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
 cai_dat_khu_vuc = [[] for _ in range(9)] #lưu cài đặt của 8 khu vực
+khu_vuc_co_nguoi = [[] for _ in range(8)]
+khu_vuc_co_chai = [[] for _ in range(8)]
+khu_vuc_co_dien_thoai = [[] for _ in range(8)]
 
 #========VOICE=============================
 
@@ -59,6 +62,34 @@ def text_to_speech(text):
     except Exception as e:
         print(f"Lỗi khi phát âm thanh: {e}")
 
+def tim_nguoi():
+    string_a = "Không phát hiện người ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_nguoi = [str(i+1) for i in range(8) if khu_vuc_co_nguoi[i] > 0]
+    
+    if khu_vuc_co_nguoi_list:
+        string_a = "Phát hiện người ở khu vực " + " ".join(khu_vuc_thuc_su_co_nguoi)
+    
+    return string_a
+
+def tim_dien_thoai():
+    string_a = "Không phát hiện điện thoại ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_dien_thoai = [str(i+1) for i in range(8) if khu_vuc_co_dien_thoai[i] > 0]
+    
+    if khu_vuc_co_nguoi_list:
+        string_a = "Phát hiện điện thoại ở khu vực " + " ".join(khu_vuc_thuc_su_co_dien_thoai)
+    
+    return string_a
+
+def tim_nguoi():
+    string_a = "Không phát hiện chai ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_chai = [str(i+1) for i in range(8) if khu_vuc_co_chai[i] > 0]
+    
+    if khu_vuc_co_nguoi_list:
+        string_a = "Phát hiện chai ở khu vực " + " ".join(khu_vuc_thuc_su_co_chai)
+    
+    return string_a
+
+
 def voice_commandz():
     global voice_command_running
     while voice_command_running:
@@ -67,7 +98,7 @@ def voice_commandz():
             response = process_command(text)
             text_to_speech(response)
 
-#=============YOLO============================
+#========XỬ LÝ KHU VỰC============================
 
 def xac_dinh_vi_tri_vat_the(x_center, y_center):
     if x_center < 160 and y_center < 240:
@@ -87,6 +118,7 @@ def xac_dinh_vi_tri_vat_the(x_center, y_center):
     elif x_center > 480 and x_center < 640 and y_center > 240:
         return 8
 
+#========MAIN=====================================
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -210,6 +242,9 @@ class MyApp(tk.Tk):
             #đoạn này phân tích kết quả nhận diện
             for vat_the in ket_qua:
                 numbers = [0] * 8
+                numbers01 = [0] * 8
+                numbers02 = [0] * 8
+                numbers03 = [0] * 8
 
                 for box in vat_the.boxes:
                     id_vat_the = int(box.cls.cpu().numpy())  
@@ -218,17 +253,31 @@ class MyApp(tk.Tk):
                     x_tam = int((x1 + x2) / 2)
                     y_tam = int((y1 + y2) / 2)
                     khu_vuc_vi_pham = xac_dinh_vi_tri_vat_the(x_tam, y_tam)
-                    print("Phát hiện vi phạm tại khu vực: " + str(khu_vuc_vi_pham))
+                    
                     if khu_vuc_vi_pham is not None:
                         if ten_vat_the in cai_dat_khu_vuc[khu_vuc_vi_pham]:
                             numbers[khu_vuc_vi_pham - 1] += 1
-                            
-                        
+
+                        if ten_vat_the == "person":
+                            numbers01[khu_vuc_vi_pham - 1] += 1
+                        if ten_vat_the == "bottle":
+                            numbers02[khu_vuc_vi_pham - 1] += 1
+                        if ten_vat_the == "cell phone":
+                            numbers03[khu_vuc_vi_pham - 1] += 1
                 
+                #cập nhật kết quả nhận diện riêng của các đối tượng
+                for i in range(8):
+                    khu_vuc_co_nguoi[i] = numbers01[i]
+                    khu_vuc_co_chai[i] = numbers02[i]
+                    khu_vuc_co_dien_thoai[i] = numbers03[i]
+
                 #gửi kết quả nhận diện qua bộ phát sóng
                 data = struct.pack('8i', *numbers)
                 ser.write(data)
                 print("Đã gửi dữ liệu:", numbers)
+                print("Phát hiện người ở:", khu_vuc_co_nguoi)
+                print("Phát hiện chai ở:", khu_vuc_co_chai)
+                print("Phát hiện điện thoại ở:", khu_vuc_co_dien_thoai)
 
             #đoạn này vẽ lưới ô và đánh số ô
             h, w, _ = khung_hinh.shape
@@ -236,6 +285,7 @@ class MyApp(tk.Tk):
                 cv2.line(khung_hinh, (w * i // 4, 0), (w * i // 4, h), (0, 255, 0), 2)
             for i in range(1, 2):
                 cv2.line(khung_hinh, (0, h * i // 2), (w, h * i // 2), (0, 255, 0), 2)
+
             #add text vào khung hình
             for i in range(4):
                 for j in range(2):
