@@ -24,7 +24,7 @@ khu_vuc_co_nguoi = [[] for _ in range(8)]
 khu_vuc_co_chai = [[] for _ in range(8)]
 khu_vuc_co_dien_thoai = [[] for _ in range(8)]
 
-#========VOICE=============================
+#========VOICE COMMAND=============================
 
 def speech_to_text():
     r = sr.Recognizer()
@@ -40,10 +40,25 @@ def speech_to_text():
             return None
 
 def process_command(text):
-    if text.lower() == "tìm người":
-        return "phát hiện người ở khu vực 2 4 6"
-    else:
-        return "He he he"
+    text = text.lower()
+    
+    tim_nguoi_keywords = ["tìm người", "tìm kiếm người", "phát hiện người", "người ở đâu", "người đâu", "người đâu rồi", "đang có người"]
+    tim_chai_keywords = ["tìm chai nước", "tìm kiếm chai nước", "phát hiện chai nước", "chai nước ở đâu", "chai nước đâu", "chai nước đâu rồi", "đang có chai nước"]
+    tim_dien_thoai_keywords = ["tìm điện thoại", "tìm kiếm điện thoại", "phát hiện điện thoại", "điện thoại ở đâu", "điện thoại đâu", "điện thoại đâu rồi", "đang có điện thoại"]
+
+    for keyword in tim_nguoi_keywords:
+        if keyword in text:
+            return tim_nguoi()
+
+    for keyword in tim_chai_keywords:
+        if keyword in text:
+            return tim_chai()
+
+    for keyword in tim_dien_thoai_keywords:
+        if keyword in text:
+            return tim_dien_thoai()
+
+    return "lệnh không hợp lệ"
 
 def text_to_speech(text):
     try:
@@ -66,7 +81,7 @@ def tim_nguoi():
     string_a = "Không phát hiện người ở bất kỳ khu vực nào"
     khu_vuc_thuc_su_co_nguoi = [str(i+1) for i in range(8) if khu_vuc_co_nguoi[i] > 0]
     
-    if khu_vuc_co_nguoi_list:
+    if any(khu_vuc_co_nguoi):
         string_a = "Phát hiện người ở khu vực " + " ".join(khu_vuc_thuc_su_co_nguoi)
     
     return string_a
@@ -75,20 +90,19 @@ def tim_dien_thoai():
     string_a = "Không phát hiện điện thoại ở bất kỳ khu vực nào"
     khu_vuc_thuc_su_co_dien_thoai = [str(i+1) for i in range(8) if khu_vuc_co_dien_thoai[i] > 0]
     
-    if khu_vuc_co_nguoi_list:
+    if any(khu_vuc_co_dien_thoai):
         string_a = "Phát hiện điện thoại ở khu vực " + " ".join(khu_vuc_thuc_su_co_dien_thoai)
     
     return string_a
 
-def tim_nguoi():
-    string_a = "Không phát hiện chai ở bất kỳ khu vực nào"
+def tim_chai():
+    string_a = "Không phát hiện cái chai ở bất kỳ khu vực nào"
     khu_vuc_thuc_su_co_chai = [str(i+1) for i in range(8) if khu_vuc_co_chai[i] > 0]
     
-    if khu_vuc_co_nguoi_list:
+    if any(khu_vuc_co_chai):
         string_a = "Phát hiện chai ở khu vực " + " ".join(khu_vuc_thuc_su_co_chai)
     
     return string_a
-
 
 def voice_commandz():
     global voice_command_running
@@ -119,6 +133,7 @@ def xac_dinh_vi_tri_vat_the(x_center, y_center):
         return 8
 
 #========MAIN=====================================
+
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
