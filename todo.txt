@@ -5,12 +5,9 @@ Làm dataset và train mô hình đặc thù phục vụ nhà máy công trườ
 
 DESKTOP APP================
 
-Thêm chức năng ra lệnh giọng nói
-(làm hàm xử lý các câu nói phức tạp ở mức độ chung bình để gọi các hàm tim_nguoi...)
-
 Thêm một bản phần mềm dùng được với nhiều cam single cam + multi camera
 
-Hiệu chỉnh và đóng gói phần mềm
+Hiệu chỉnh và đóng gói phần mềm bằng docker
 
 
 
