@@ -7,16 +7,112 @@ from ultralytics import YOLO
 import numpy as np
 import struct
 import serial
+import speech_recognition as sr
+from gtts import gTTS
+import pygame
+import os
 
 #==========SETTING==========================================================
 model = YOLO("yolov8n.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
 ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
-#===========================================================================
 
+#==========GLOBAL_VAR==================================================
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
 cai_dat_khu_vuc = [[] for _ in range(9)] #lưu cài đặt của 8 khu vực
+khu_vuc_co_nguoi = [[] for _ in range(8)]
+khu_vuc_co_chai = [[] for _ in range(8)]
+khu_vuc_co_dien_thoai = [[] for _ in range(8)]
 
+#========VOICE COMMAND=============================
+
+def speech_to_text():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        text_to_speech("Xin mời nói")
+        audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio, language="vi-VI")
+            print("Nghe được: {}".format(text))
+            return text
+        except Exception as e:
+            print(f"Không nhận dạng được giọng nói! Lỗi: {e}")
+            return None
+
+def process_command(text):
+    text = text.lower()
+    
+    tim_nguoi_keywords = ["tìm người", "tìm kiếm người", "phát hiện người", "người ở đâu", "người đâu", "người đâu rồi", "đang có người"]
+    tim_chai_keywords = ["tìm chai nước", "tìm kiếm chai nước", "phát hiện chai nước", "chai nước ở đâu", "chai nước đâu", "chai nước đâu rồi", "đang có chai nước"]
+    tim_dien_thoai_keywords = ["tìm điện thoại", "tìm kiếm điện thoại", "phát hiện điện thoại", "điện thoại ở đâu", "điện thoại đâu", "điện thoại đâu rồi", "đang có điện thoại"]
+
+    for keyword in tim_nguoi_keywords:
+        if keyword in text:
+            return tim_nguoi()
+
+    for keyword in tim_chai_keywords:
+        if keyword in text:
+            return tim_chai()
+
+    for keyword in tim_dien_thoai_keywords:
+        if keyword in text:
+            return tim_dien_thoai()
+
+    return "lệnh không hợp lệ"
+
+def text_to_speech(text):
+    try:
+        output = gTTS(text, lang="vi", slow=False)
+        filename = "output.mp3"
+        output.save(filename)
+        
+        pygame.mixer.init()
+        pygame.mixer.music.load(filename)
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
+        pygame.quit()
+        
+        os.remove(filename)
+    except Exception as e:
+        print(f"Lỗi khi phát âm thanh: {e}")
+
+def tim_nguoi():
+    string_a = "Không phát hiện người ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_nguoi = [str(i+1) for i in range(8) if khu_vuc_co_nguoi[i] > 0]
+    
+    if any(khu_vuc_co_nguoi):
+        string_a = "Phát hiện người ở khu vực " + " ".join(khu_vuc_thuc_su_co_nguoi)
+    
+    return string_a
+
+def tim_dien_thoai():
+    string_a = "Không phát hiện điện thoại ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_dien_thoai = [str(i+1) for i in range(8) if khu_vuc_co_dien_thoai[i] > 0]
+    
+    if any(khu_vuc_co_dien_thoai):
+        string_a = "Phát hiện điện thoại ở khu vực " + " ".join(khu_vuc_thuc_su_co_dien_thoai)
+    
+    return string_a
+
+def tim_chai():
+    string_a = "Không phát hiện cái chai ở bất kỳ khu vực nào"
+    khu_vuc_thuc_su_co_chai = [str(i+1) for i in range(8) if khu_vuc_co_chai[i] > 0]
+    
+    if any(khu_vuc_co_chai):
+        string_a = "Phát hiện chai ở khu vực " + " ".join(khu_vuc_thuc_su_co_chai)
+    
+    return string_a
+
+def voice_commandz():
+    global voice_command_running
+    while voice_command_running:
+        text = speech_to_text()
+        if text:
+            response = process_command(text)
+            text_to_speech(response)
+
+#========XỬ LÝ KHU VỰC============================
 
 def xac_dinh_vi_tri_vat_the(x_center, y_center):
     if x_center < 160 and y_center < 240:
@@ -36,12 +132,16 @@ def xac_dinh_vi_tri_vat_the(x_center, y_center):
     elif x_center > 480 and x_center < 640 and y_center > 240:
         return 8
 
+#========MAIN=====================================
+
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.running = False
         self.title("YOLO WatchDog Beta 2.0")
-        self.geometry("400x400")
+        self.geometry("400x450")
+        # self.attributes("-topmost", True)
+        # self.configure(bg="yellow")
 
         #logo
         self.logo_label = Label(self)
@@ -74,8 +174,28 @@ class MyApp(tk.Tk):
         self.label = Label(self, text="Stopped")
         self.label.pack()
 
-        self.video_window = None
+        #thêm nút bật tắt giọng nói
+        self.voice_button = Button(self, text="VOICE COMMAND", font=("Arial", 10, "bold"), command=self.toggle_voice_command)
+        self.voice_button.pack(pady=(10,10))
+        global voice_command_running
+        voice_command_running = False #biến toàn cục để điều khiển luồng giọng nói
+        self.voice_status_label = Label(self, text="Inactive")
+        self.voice_status_label.pack()
 
+        self.video_window = None
+        
+    #nút bật tắt giọng nói
+    def toggle_voice_command(self):
+        global voice_command_running
+        voice_command_running = not voice_command_running
+        
+        if voice_command_running:
+            self.voice_status_label.config(text="Active")
+            self.voice_thread = threading.Thread(target=voice_commandz, daemon=True)
+            self.voice_thread.start()
+        else:
+            self.voice_status_label.config(text="Inactive")
+            
     #nút start + stop
     def on_click(self):
         self.running = not self.running
@@ -137,6 +257,9 @@ class MyApp(tk.Tk):
             #đoạn này phân tích kết quả nhận diện
             for vat_the in ket_qua:
                 numbers = [0] * 8
+                numbers01 = [0] * 8
+                numbers02 = [0] * 8
+                numbers03 = [0] * 8
 
                 for box in vat_the.boxes:
                     id_vat_the = int(box.cls.cpu().numpy())  
@@ -145,17 +268,31 @@ class MyApp(tk.Tk):
                     x_tam = int((x1 + x2) / 2)
                     y_tam = int((y1 + y2) / 2)
                     khu_vuc_vi_pham = xac_dinh_vi_tri_vat_the(x_tam, y_tam)
-                    print("Phát hiện vi phạm tại khu vực: " + str(khu_vuc_vi_pham))
+                    
                     if khu_vuc_vi_pham is not None:
                         if ten_vat_the in cai_dat_khu_vuc[khu_vuc_vi_pham]:
                             numbers[khu_vuc_vi_pham - 1] += 1
-                            
-                        
+
+                        if ten_vat_the == "person":
+                            numbers01[khu_vuc_vi_pham - 1] += 1
+                        if ten_vat_the == "bottle":
+                            numbers02[khu_vuc_vi_pham - 1] += 1
+                        if ten_vat_the == "cell phone":
+                            numbers03[khu_vuc_vi_pham - 1] += 1
                 
+                #cập nhật kết quả nhận diện riêng của các đối tượng
+                for i in range(8):
+                    khu_vuc_co_nguoi[i] = numbers01[i]
+                    khu_vuc_co_chai[i] = numbers02[i]
+                    khu_vuc_co_dien_thoai[i] = numbers03[i]
+
                 #gửi kết quả nhận diện qua bộ phát sóng
                 data = struct.pack('8i', *numbers)
                 ser.write(data)
                 print("Đã gửi dữ liệu:", numbers)
+                print("Phát hiện người ở:", khu_vuc_co_nguoi)
+                print("Phát hiện chai ở:", khu_vuc_co_chai)
+                print("Phát hiện điện thoại ở:", khu_vuc_co_dien_thoai)
 
             #đoạn này vẽ lưới ô và đánh số ô
             h, w, _ = khung_hinh.shape
@@ -164,6 +301,7 @@ class MyApp(tk.Tk):
             for i in range(1, 2):
                 cv2.line(khung_hinh, (0, h * i // 2), (w, h * i // 2), (0, 255, 0), 2)
 
+            #add text vào khung hình
             for i in range(4):
                 for j in range(2):
                     cv2.putText(khung_hinh, str(i + j * 4 + 1), (w * i // 4 + 10, h * j // 2 + 30),
