@@ -23,7 +23,7 @@ import pygame
 import os
 
 #==========SETTING==========================================================
-model = YOLO("yolov8n.pt")  #trọng số
+model = YOLO("yolov8x.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
 ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
 
@@ -39,7 +39,7 @@ khu_vuc_co_dien_thoai = [[] for _ in range(8)]
 def speech_to_text():
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        text_to_speech("Xin mời nói")
+        text_to_speech("Xin mời lói")
         audio = r.listen(source)
         try:
             text = r.recognize_google(audio, language="vi-VI")
