@@ -25,7 +25,7 @@ import os
 #==========SETTING==========================================================
 model = YOLO("yolov8n.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
-ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
+ser = serial.Serial('COM10', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
 
 #==========GLOBAL_VAR==================================================
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
@@ -148,8 +148,8 @@ class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.running = False
-        self.title("YOLO WatchDog Beta 2.0")
-        self.geometry("400x450")
+        self.title("YOLO WatchDog Beta 3.0")
+        self.geometry("400x500")
         # self.attributes("-topmost", True)
         # self.configure(bg="yellow")
 
@@ -158,7 +158,7 @@ class MyApp(tk.Tk):
         self.logo_label.pack(pady=10)
         try:
             image = Image.open("app_logo.png")
-            image = image.resize((380, 120))
+            image = image.resize((380, 150))
             self.logo = ImageTk.PhotoImage(image)
             self.logo_label.config(image=self.logo)
         except:
