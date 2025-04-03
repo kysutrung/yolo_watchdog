@@ -4,7 +4,8 @@
 
 #define LED_PIN 4
 
-uint8_t receiverMAC[] = {0xE4, 0x65, 0xB8, 0x78, 0x6A, 0x50};
+uint8_t receiverMACofPrototype2[] = {0xE4, 0x65, 0xB8, 0x78, 0x6A, 0x50};
+uint8_t receiverMACofM5[] = {0x10, 0x06, 0x1C, 0x27, 0xEF, 0x14};
 
 typedef struct {
     int numbers[8];
@@ -43,7 +44,7 @@ void loop() {
             packet.numbers[i] = numbers[i];
         }
 
-        esp_err_t result = esp_now_send(receiverMAC, (uint8_t*)&packet, sizeof(packet));
+        esp_err_t result = esp_now_send(receiverMACofPrototype2, (uint8_t*)&packet, sizeof(packet));
 
     }
 }
