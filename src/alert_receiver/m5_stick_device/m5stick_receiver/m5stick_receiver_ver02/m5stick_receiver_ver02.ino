@@ -48,7 +48,7 @@ void yoloWatchdog(){
     StickCP2.Display.setCursor(20, 10);
     StickCP2.Display.printf("Alert Status");
     StickCP2.Display.setTextSize(2);
-    StickCP2.Display.setCursor(40, 40);
+    StickCP2.Display.setCursor(40, 36);
     StickCP2.Display.printf("%d | %d | %d | %d", soNhanDuoc[0], soNhanDuoc[1], soNhanDuoc[2], soNhanDuoc[3]);
     StickCP2.Display.setCursor(40, 70);
     StickCP2.Display.printf("%d | %d | %d | %d", soNhanDuoc[4], soNhanDuoc[5], soNhanDuoc[6], soNhanDuoc[7]);
