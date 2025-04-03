@@ -25,7 +25,7 @@ import os
 #==========SETTING==========================================================
 model = YOLO("yolov8n.pt")  #trọng số
 hinh_anh_dau_vao = cv2.VideoCapture(0)  #camera
-ser = serial.Serial('COM10', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
+ser = serial.Serial('COM5', 115200, timeout=1)  #cổng cắm bộ phát tín hiệu
 
 #==========GLOBAL_VAR==================================================
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"] #đối tượng cấm
