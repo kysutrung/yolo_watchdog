@@ -1,0 +1,9 @@
+lệnh lấy firmware
+
+python -m esptool --chip esp32 --port COM3 read_flash 0x00000 0x400000 firmware.bin
+
+
+lệnh nạp firmware
+
+python -m esptool --chip esp32 --port COM4 write_flash 0x00000 firmware.bin
+
