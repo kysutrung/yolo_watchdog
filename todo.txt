@@ -1,8 +1,3 @@
-GENERAL ===================================================
-
-Làm dataset và train mô hình đặc thù phục vụ nhà máy công trường.....
-
-
 DESKTOP APP================
 
 Thêm một bản phần mềm dùng được với nhiều cam single cam + multi camera
