@@ -1,9 +1,0 @@
-DESKTOP APP================
-
-Thêm một bản phần mềm dùng được với nhiều cam single cam + multi camera
-
-Hiệu chỉnh và đóng gói phần mềm bằng docker
-
-
-
-
