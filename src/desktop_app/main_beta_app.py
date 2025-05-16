@@ -25,7 +25,7 @@ import pygame
 import os
 
 #==========SETTING==========================================================
-model = YOLO("image_processor/yolo_weight/yolov8n.pt")  # trọng số
+model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")  # trọng số
 
 #==========GLOBAL_VAR==================================================
 cac_doi_tuong_cam = ["bottle", "person", "cell phone"]  # đối tượng cấm
