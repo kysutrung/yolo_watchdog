@@ -6,7 +6,6 @@ from datetime import datetime
 
 print("RUNNING...")
 
-# ⚙️ Cài đặt
 model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")
 CAM_ID, WIDTH, HEIGHT = 1, 640, 480
 CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
@@ -16,7 +15,7 @@ pygame.mixer.init()
 ALERT = "for_image_processor/alert.mp3"
 LOG_FILE = "for_image_processor/detections_log.txt"
 
-# Kết nối Serial
+#Serial
 try:
     ser = serial.Serial('COM21', 9600, timeout=1)
     def send_servo(i, a):
@@ -83,7 +82,7 @@ def toggle_tracking():
     status.config(text=f"Auto Tracking: {'ON' if auto_tracking else 'OFF'}")
     button.config(text="Tắt" if auto_tracking else "Bật")
 
-# Giao diện
+#Giao diện
 root = tk.Tk()
 root.title("YOLO Tracker")
 root.geometry("300x150")
