@@ -1,114 +1,71 @@
 import tkinter as tk
 from threading import Thread
-import cv2
-import serial
+import cv2, serial, time, os, pygame
 from ultralytics import YOLO
-import pygame
-import time
-import os
 
-# ⚙️ Cài đặt YOLO
+print("RUNNING...")
+
+# ⚙️ Cài đặt
 model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")
-
-CAM_ID = 1
-FRAME_WIDTH = 640
-FRAME_HEIGHT = 480
-CENTER_X = FRAME_WIDTH // 2
-CENTER_Y = FRAME_HEIGHT // 2
-DEAD_ZONE = 40
-STEP = 2
-
-# Servo điều khiển
-servo1_angle = 90
-servo2_angle = 90
-auto_tracking = False
-last_alert_time = 0
-
-# 🔊 Âm thanh cảnh báo
-ALERT_SOUND_PATH = "alert.mp3"
+CAM_ID, WIDTH, HEIGHT = 1, 640, 480
+CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
+DEAD_ZONE, STEP = 40, 2
+servo1, servo2, auto_tracking, last_alert = 90, 90, False, 0
 pygame.mixer.init()
-
-def play_alert():
-    if os.path.exists(ALERT_SOUND_PATH):
-        try:
-            sound = pygame.mixer.Sound(ALERT_SOUND_PATH)
-            sound.play()
-        except Exception as e:
-            print("⚠️ Lỗi phát âm thanh:", e)
-    else:
-        print("⚠️ File âm thanh không tồn tại:", ALERT_SOUND_PATH)
+ALERT = "alert.mp3"
 
 # Kết nối Serial
 try:
     ser = serial.Serial('COM21', 9600, timeout=1)
-
-    def send_servo(servo_id, angle):
-        angle = max(0, min(180, angle))
-        cmd = f"{servo_id}:{angle}\n"
-        if ser and ser.is_open:
-            ser.write(cmd.encode())
-
-    send_servo(1, 90)
-    send_servo(2, 90)
-
-except Exception as e:
-    print("Không thể mở cổng serial:", e)
+    def send_servo(i, a):
+        ser.write(f"{i}:{max(0, min(180, a))}\n".encode())
+    send_servo(1, servo1)
+    send_servo(2, servo2)
+except:  # fallback nếu không có serial
     ser = None
+    def send_servo(i, a): pass
 
-    def send_servo(servo_id, angle):
-        pass
+def play_alert():
+    if os.path.exists(ALERT):
+        try: pygame.mixer.Sound(ALERT).play()
+        except: pass
 
 def video_loop():
-    global servo1_angle, servo2_angle, auto_tracking, last_alert_time
-
+    global servo1, servo2, auto_tracking, last_alert
     cap = cv2.VideoCapture(CAM_ID)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
+    cap.set(3, WIDTH)
+    cap.set(4, HEIGHT)
 
     while cap.isOpened():
         ret, frame = cap.read()
-        if not ret:
-            break
+        if not ret: break
 
-        results = model.predict(source=frame, conf=0.3, device='cuda', classes=[0], verbose=False)
+        results = model.predict(frame, conf=0.3, device='cuda', classes=[0], verbose=False)
         boxes = results[0].boxes
 
-        if boxes is not None and len(boxes) > 0:
-            current_time = time.time()
-            if current_time - last_alert_time > 5:
+        if boxes:
+            if time.time() - last_alert > 5:
                 play_alert()
-                last_alert_time = current_time
+                last_alert = time.time()
 
-            largest_box = max(boxes, key=lambda b: (b.xyxy[0][2] - b.xyxy[0][0]) * (b.xyxy[0][3] - b.xyxy[0][1]))
-            x1, y1, x2, y2 = map(int, largest_box.xyxy[0])
-            cx = (x1 + x2) // 2
-            cy = (y1 + y2) // 2
+            box = max(boxes, key=lambda b: (b.xyxy[0][2] - b.xyxy[0][0]) * (b.xyxy[0][3] - b.xyxy[0][1]))
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
 
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
-            cv2.circle(frame, (CENTER_X, CENTER_Y), 5, (255, 0, 0), -1)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0), 2)
+            cv2.circle(frame, (cx, cy), 5, (0,0,255), -1)
+            cv2.circle(frame, (CENTER_X, CENTER_Y), 5, (255,0,0), -1)
 
             if auto_tracking:
-                dx = cx - CENTER_X
-                dy = cy - CENTER_Y
-
-                if abs(dx) > DEAD_ZONE:
-                    if dx > 0:
-                        servo1_angle -= STEP
-                    else:
-                        servo1_angle += STEP
-                    send_servo(1, servo1_angle)
-
-                if abs(dy) > DEAD_ZONE:
-                    if dy > 0:
-                        servo2_angle -= STEP
-                    else:
-                        servo2_angle += STEP
-                    send_servo(2, servo2_angle)
+                if abs(cx - CENTER_X) > DEAD_ZONE:
+                    servo1 += STEP if cx < CENTER_X else -STEP
+                    send_servo(1, servo1)
+                if abs(cy - CENTER_Y) > DEAD_ZONE:
+                    servo2 += STEP if cy < CENTER_Y else -STEP
+                    send_servo(2, servo2)
 
         cv2.imshow("Tracking", frame)
-        if cv2.waitKey(1) & 0xFF == 27:
-            break
+        if cv2.waitKey(1) & 0xFF == 27: break
 
     cap.release()
     cv2.destroyAllWindows()
@@ -116,29 +73,19 @@ def video_loop():
 def toggle_tracking():
     global auto_tracking
     auto_tracking = not auto_tracking
-    status_label.config(text=f"Auto Tracking: {'ON' if auto_tracking else 'OFF'}")
-    toggle_button.config(text="Tắt" if auto_tracking else "Bật")
+    status.config(text=f"Auto Tracking: {'ON' if auto_tracking else 'OFF'}")
+    button.config(text="Tắt" if auto_tracking else "Bật")
 
-# Giao diện Tkinter
+# GUI
 root = tk.Tk()
-root.title("YOLO WatchDog Tracker")
+root.title("YOLO Tracker")
 root.geometry("300x150")
 
-status_label = tk.Label(root, text="Auto Tracking: OFF", font=("Arial", 16))
-status_label.pack(pady=10)
+status = tk.Label(root, text="Auto Tracking: OFF", font=("Arial", 16))
+status.pack(pady=10)
 
-toggle_button = tk.Button(
-    root,
-    text="Bật",
-    font=("Arial", 14),
-    command=toggle_tracking,
-    bg='red',
-    fg='white'
-)
-toggle_button.pack(pady=10)
+button = tk.Button(root, text="Bật", font=("Arial", 14), bg='red', fg='white', command=toggle_tracking)
+button.pack(pady=10)
 
-# Chạy video trong luồng riêng
-thread = Thread(target=video_loop, daemon=True)
-thread.start()
-
+Thread(target=video_loop, daemon=True).start()
 root.mainloop()
