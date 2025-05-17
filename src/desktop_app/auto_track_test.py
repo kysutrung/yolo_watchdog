@@ -1,54 +1,83 @@
-from ultralytics import YOLO
 import cv2
 import serial
-import time
+from ultralytics import YOLO
 
-# Tải mô hình YOLO
+# ⚙️ Cài đặt
 model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")
 
-# Kết nối với ESP32 qua cổng USB (COM port, ví dụ 'COM3' trên Windows hoặc '/dev/ttyUSB0' trên Linux)
-ser = serial.Serial('COM19', 115200)  # Thay 'COM3' bằng cổng USB thực tế của bạn
-time.sleep(2)  # Đợi 2 giây để ESP32 có thể khởi động và nhận tín hiệu
+CAM_ID = 1  # Camera ID (0 = webcam, 1 = USB cam)
+FRAME_WIDTH = 640
+FRAME_HEIGHT = 480
+CENTER_X = FRAME_WIDTH // 2
+CENTER_Y = FRAME_HEIGHT // 2
+DEAD_ZONE = 40  # Vùng không cần điều chỉnh nếu lệch nhỏ hơn
 
-# Bắt nguồn từ webcam
-cap = cv2.VideoCapture(1)
+# Servo điều khiển
+servo1_angle = 90  # quay trái/phải (x)
+servo2_angle = 90  # ngẩng lên/xuống (y)
+STEP = 2
 
-while True:
-    # Đọc một khung hình từ webcam
+# Serial ESP32
+try:
+    ser = serial.Serial('COM21', 9600, timeout=1)
+except Exception as e:
+    print("Không thể mở cổng serial:", e)
+    ser = None
+
+def send_servo(servo_id, angle):
+    angle = max(0, min(180, angle))  # giới hạn góc
+    cmd = f"{servo_id}:{angle}\n"
+    if ser and ser.is_open:
+        ser.write(cmd.encode())
+
+# Mở camera
+cap = cv2.VideoCapture(CAM_ID)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
+
+while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
         break
 
-    # Dự đoán đối tượng trong khung hình
-    results = model.predict(source=frame, conf=0.3, device="cpu", classes=[0], show=False)
+    # Phát hiện người
+    results = model.predict(source=frame, conf=0.3, device='cuda', classes=[0], verbose=False)
+    boxes = results[0].boxes
 
-    # Lấy bounding boxes và gửi tọa độ tâm qua cổng USB
-    for result in results:
-        # Lấy các bounding box (x1, y1, x2, y2)
-        boxes = result.boxes.xyxy.cpu().numpy()
+    if boxes is not None and len(boxes) > 0:
+        # Chọn bounding box lớn nhất (người gần nhất)
+        largest_box = max(boxes, key=lambda b: (b.xyxy[0][2] - b.xyxy[0][0]) * (b.xyxy[0][3] - b.xyxy[0][1]))
+        x1, y1, x2, y2 = map(int, largest_box.xyxy[0])
+        cx = (x1 + x2) // 2
+        cy = (y1 + y2) // 2
 
-        for box in boxes:
-            # Lấy tọa độ của bounding box
-            x1, y1, x2, y2 = box
-            # Tính toán tọa độ tâm và làm tròn
-            center_x = round((x1 + x2) / 2)
-            center_y = round((y1 + y2) / 2)
-            print(f"Bounding box center: ({center_x}, {center_y})")
+        # Vẽ khung và tâm
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
+        cv2.circle(frame, (CENTER_X, CENTER_Y), 5, (255, 0, 0), -1)
 
-            # Gửi tọa độ tâm qua cổng USB đến ESP32
-            ser.write(f"{center_x},{center_y}\n".encode())
+        # So sánh và điều chỉnh
+        dx = cx - CENTER_X
+        dy = cy - CENTER_Y
 
-            # Vẽ bounding box và tâm lên ảnh
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-            cv2.circle(frame, (int(center_x), int(center_y)), 5, (0, 0, 255), -1)
+        if abs(dx) > DEAD_ZONE:
+            if dx > 0:
+                servo1_angle -= STEP  # Người lệch phải → quay phải (giảm góc)
+            else:
+                servo1_angle += STEP  # Người lệch trái → quay trái (tăng góc)
+            send_servo(1, servo1_angle)
 
-    # Hiển thị khung hình với bounding boxes
-    cv2.imshow("Frame", frame)
+        if abs(dy) > DEAD_ZONE:
+            if dy > 0:
+                servo2_angle -= STEP  # Người thấp → cúi xuống
+            else:
+                servo2_angle += STEP  # Người cao → ngẩng lên
+            send_servo(2, servo2_angle)
 
-    # Dừng khi nhấn phím 'q'
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    # Hiển thị
+    cv2.imshow("Tracking", frame)
+    if cv2.waitKey(1) & 0xFF == 27:
         break
 
-# Giải phóng tài nguyên
 cap.release()
 cv2.destroyAllWindows()

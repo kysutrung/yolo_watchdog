@@ -2,10 +2,10 @@ from ultralytics import YOLO
 
 import cv2
 
-model = YOLO("yolov8n.pt")
+model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")
 
-results = model.predict(source="0", 
+results = model.predict(source="1", 
                         conf=0.3,
-                        device="cpu",
+                        device="cuda",
                         classes=[0],
                         show=True)
