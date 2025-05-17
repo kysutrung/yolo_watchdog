@@ -2,6 +2,7 @@ import tkinter as tk
 from threading import Thread
 import cv2, serial, time, os, pygame
 from ultralytics import YOLO
+from datetime import datetime
 
 print("RUNNING...")
 
@@ -12,7 +13,8 @@ CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
 DEAD_ZONE, STEP = 40, 2
 servo1, servo2, auto_tracking, last_alert = 90, 90, False, 0
 pygame.mixer.init()
-ALERT = "alert.mp3"
+ALERT = "for_image_processor/alert.mp3"
+LOG_FILE = "for_image_processor/detections_log.txt"
 
 # Kết nối Serial
 try:
@@ -21,7 +23,7 @@ try:
         ser.write(f"{i}:{max(0, min(180, a))}\n".encode())
     send_servo(1, servo1)
     send_servo(2, servo2)
-except:  # fallback nếu không có serial
+except:
     ser = None
     def send_servo(i, a): pass
 
@@ -29,6 +31,10 @@ def play_alert():
     if os.path.exists(ALERT):
         try: pygame.mixer.Sound(ALERT).play()
         except: pass
+
+def log_detection():
+    with open(LOG_FILE, "a") as f:
+        f.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] Phat hien nguoi \n"))
 
 def video_loop():
     global servo1, servo2, auto_tracking, last_alert
@@ -46,6 +52,7 @@ def video_loop():
         if boxes:
             if time.time() - last_alert > 5:
                 play_alert()
+                log_detection()
                 last_alert = time.time()
 
             box = max(boxes, key=lambda b: (b.xyxy[0][2] - b.xyxy[0][0]) * (b.xyxy[0][3] - b.xyxy[0][1]))
@@ -76,7 +83,7 @@ def toggle_tracking():
     status.config(text=f"Auto Tracking: {'ON' if auto_tracking else 'OFF'}")
     button.config(text="Tắt" if auto_tracking else "Bật")
 
-# GUI
+# Giao diện
 root = tk.Tk()
 root.title("YOLO Tracker")
 root.geometry("300x150")
