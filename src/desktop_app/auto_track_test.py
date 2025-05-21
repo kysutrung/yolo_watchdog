@@ -15,9 +15,8 @@ pygame.mixer.init()
 ALERT = "for_image_processor/alert.mp3"
 LOG_FILE = "for_image_processor/detections_log.txt"
 
-#Serial
 try:
-    ser = serial.Serial('COM21', 9600, timeout=1)
+    ser = serial.Serial('COM5', 9600, timeout=1)
     def send_servo(i, a):
         ser.write(f"{i}:{max(0, min(180, a))}\n".encode())
     send_servo(1, servo1)
@@ -66,11 +65,13 @@ def video_loop():
                 if abs(cx - CENTER_X) > DEAD_ZONE:
                     servo1 += STEP if cx < CENTER_X else -STEP
                     send_servo(1, servo1)
+                    servo1_scale.set(servo1)  
                 if abs(cy - CENTER_Y) > DEAD_ZONE:
                     servo2 += STEP if cy < CENTER_Y else -STEP
                     send_servo(2, servo2)
+                    servo2_scale.set(servo2)
 
-        cv2.imshow("Tracking", frame)
+        cv2.imshow("Camera", frame)
         if cv2.waitKey(1) & 0xFF == 27: break
 
     cap.release()
@@ -82,16 +83,43 @@ def toggle_tracking():
     status.config(text=f"Auto Tracking: {'ON' if auto_tracking else 'OFF'}")
     button.config(text="Tắt" if auto_tracking else "Bật")
 
+def update_servo1(val):
+    global servo1
+    servo1 = int(val)
+    if not auto_tracking:
+        send_servo(1, servo1)
+
+def update_servo2(val):
+    global servo2
+    servo2 = int(val)
+    if not auto_tracking:
+        send_servo(2, servo2)
+
 #Giao diện
 root = tk.Tk()
-root.title("YOLO Tracker")
-root.geometry("300x150")
+root.title("YOLO WatchDog Tracker")
+root.geometry("300x350")
 
-status = tk.Label(root, text="Auto Tracking: OFF", font=("Arial", 16))
+status = tk.Label(root, text="Auto Tracking: OFF", font=("Arial", 16, "bold"))
 status.pack(pady=10)
 
 button = tk.Button(root, text="Bật", font=("Arial", 14), bg='red', fg='white', command=toggle_tracking)
 button.pack(pady=10)
+
+manual_control_label = tk.Label(root, text="Manual Control", font=("Arial", 16, "bold"))
+manual_control_label.pack(pady=10)
+
+servo1_label = tk.Label(root, text="Right              Left")
+servo1_label.pack()
+servo1_scale = tk.Scale(root, from_=0, to=180, orient="horizontal", command=update_servo1)
+servo1_scale.set(servo1)
+servo1_scale.pack(pady=5)
+
+servo2_label = tk.Label(root, text="Down                 Up")
+servo2_label.pack()
+servo2_scale = tk.Scale(root, from_=0, to=180, orient="horizontal", command=update_servo2)
+servo2_scale.set(servo2)
+servo2_scale.pack(pady=5)
 
 Thread(target=video_loop, daemon=True).start()
 root.mainloop()
