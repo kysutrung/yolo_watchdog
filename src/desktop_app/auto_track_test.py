@@ -1,3 +1,15 @@
+#  __     ______  _      ____   __          __  _______ _____ _    _ _____   ____   _____ 
+#  \ \   / / __ \| |    / __ \  \ \        / /\|__   __/ ____| |  | |  __ \ / __ \ / ____|
+#   \ \_/ / |  | | |   | |  | |  \ \  /\  / /  \  | | | |    | |__| | |  | | |  | | |  __ 
+#    \   /| |  | | |   | |  | |   \ \/  \/ / /\ \ | | | |    |  __  | |  | | |  | | | |_ |
+#     | | | |__| | |___| |__| |    \  /\  / ____ \| | | |____| |  | | |__| | |__| | |__| |
+#   __|_|__\____/|______\____/____ _\/__\/_/__ _\_\_|  \_____|_|  |_|_____/ \____/ \_____|
+#  |__   __|  __ \     /\   / ____| |/ /  ____|  __ \                                     
+#     | |  | |__) |   /  \ | |    | ' /| |__  | |__) |                                    
+#     | |  |  _  /   / /\ \| |    |  < |  __| |  _  /                                     
+#     | |  | | \ \  / ____ \ |____| . \| |____| | \ \                                     
+#     |_|  |_|  \_\/_/    \_\_____|_|\_\______|_|  \_\   
+
 import tkinter as tk
 from threading import Thread
 import cv2, serial, time, os, pygame
@@ -8,15 +20,15 @@ print("RUNNING...")
 
 model = YOLO("for_image_processor/yolo_weight/yolov8n.pt")
 CAM_ID, WIDTH, HEIGHT = 1, 640, 480
-CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
-DEAD_ZONE, STEP = 40, 2
+CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2 #tọa độ tâm khung hình
+DEAD_ZONE, STEP = 100, 2
 servo1, servo2, auto_tracking, last_alert = 90, 90, False, 0
 pygame.mixer.init()
 ALERT = "for_image_processor/alert.mp3"
 LOG_FILE = "for_image_processor/detections_log.txt"
 
 try:
-    ser = serial.Serial('COM5', 9600, timeout=1)
+    ser = serial.Serial('COM20', 9600, timeout=1)
     def send_servo(i, a):
         ser.write(f"{i}:{max(0, min(180, a))}\n".encode())
     send_servo(1, servo1)
@@ -44,7 +56,11 @@ def video_loop():
         ret, frame = cap.read()
         if not ret: break
 
-        results = model.predict(frame, conf=0.3, device='cuda', classes=[0], verbose=False)
+        results = model.predict(frame, 
+                                conf=0.3, 
+                                device='cuda', 
+                                classes=[0], # 0 - Nguoi 39 - Chai
+                                verbose=False)
         boxes = results[0].boxes
 
         if boxes:
@@ -53,14 +69,19 @@ def video_loop():
                 log_detection()
                 last_alert = time.time()
 
+            #hàm max này duyệt hết mảng boxes để tìm ra phần tử nào khi làm tham số cho hàm b cho ra giá trị lớn nhất
             box = max(boxes, key=lambda b: (b.xyxy[0][2] - b.xyxy[0][0]) * (b.xyxy[0][3] - b.xyxy[0][1]))
+            
+            #hàm tính tọa độ tâm đây
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
 
+            #đoạn này vẽ hình minh họa
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0), 2)
             cv2.circle(frame, (cx, cy), 5, (0,0,255), -1)
             cv2.circle(frame, (CENTER_X, CENTER_Y), 5, (255,0,0), -1)
 
+            #hàm so sánh gửi lệnh quay servo
             if auto_tracking:
                 if abs(cx - CENTER_X) > DEAD_ZONE:
                     servo1 += STEP if cx < CENTER_X else -STEP
@@ -77,6 +98,7 @@ def video_loop():
     cap.release()
     cv2.destroyAllWindows()
 
+#khu này làm giao diện
 def toggle_tracking():
     global auto_tracking
     auto_tracking = not auto_tracking
