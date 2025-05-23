@@ -43,6 +43,9 @@ __Remote Monitor Unit__
 - [ ] Expansion port
 - [ ] Connection lost notification 
 
+__Auto Tracking Unit__
+- [x] Auto move camera facing to object
+
 __Window PC App (ESP NOW UNIT needed)__
 - [x] Whole system work right in Windows OS
 - [x] Control UI
