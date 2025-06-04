@@ -28,7 +28,7 @@ ALERT = "for_image_processor/alert.mp3"
 LOG_FILE = "for_image_processor/detections_log.txt"
 
 try:
-    ser = serial.Serial('COM20', 9600, timeout=1)
+    ser = serial.Serial('COM5', 9600, timeout=1)
     def send_servo(i, a):
         ser.write(f"{i}:{max(0, min(180, a))}\n".encode())
     send_servo(1, servo1)

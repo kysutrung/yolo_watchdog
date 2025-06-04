@@ -2,8 +2,8 @@
 
 Servo myservo1;
 Servo myservo2;
-int servoPin1 = 13;
-int servoPin2 = 12;
+int servoPin1 = 12;
+int servoPin2 = 13;
 
 void setup() {
   Serial.begin(9600);
