@@ -2,13 +2,13 @@
 
 # YOLO Watchdog
 
-Machine Learning Applied Multi-Zone Safety Supervisor Assistant Camera System Project
+Hệ Thống Trợ Lý Giám Sát An Toàn Ứng Dụng Công Nghệ Học Máy 
 
 Keyword: yolov8, esp now, python app, hardware design.
 
-## 📑 Project Description
+## 📑 Mô Tả Dự Án
 
-Building a smart surveillance camera system base on YOLO algorithm. Able to detect the presence of prohibited (weapon, lighter, liquid can, human....) and indispensable objects (protective gear, human who run machine....) in each area at a location (factory, construction site, work place...) for safety reasons. Sending notification to remote monitor unit via ESP NOW. Helps those who work as a safety supervisor to work more effectively.
+Xây dựng một hệ thống máy quay giám sát dựa trên thuật toán học máy YOLO (You Only Look Once). Cho phép xác định ra các tình huống nguy hiểm dựa trên việc xác định được các vật thể bị cấm trong từng khu vực riêng biệt. Tăng độ an toàn cho các khu vực bằng việc đảm bảo các tình huống vi phạm an toàn khả năng phát hiện ra các tình huống không đảm bảo an toàn như việc thiếu đồ bảo hộ, không có người vận hành ở các vị trí quan trọng. Sau khi phát hiện được những tình huống, hệ thống sẽ kích hoạt cơ chế thông áo gửi tới người làm công tác giám sát từ xa thông qua sóng không dây. Hỗ trợ những giám sát viên làm việc hiệu quả và nhanh chóng hơn.
 
 ## ❓ What & Why YOLO Algorithm
 __YOLO__ (You Only Look Once) is a real-time object detection algorithm that identifies objects in images or video frames with high speed and accuracy. Unlike traditional methods that scan an image in multiple passes, YOLO processes the entire image in a single forward pass, making it very efficient.
