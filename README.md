@@ -2,6 +2,8 @@
 
 # YOLO Watchdog
 
+[Click here for English](https://github.com/kysutrung/yolo_watchdog/blob/main/ENG_README.md)
+
 Hệ Thống Trợ Lý Giám Sát An Toàn Ứng Dụng Công Nghệ Học Máy 
 
 Keyword: yolov8, esp now, python app, hardware design.
