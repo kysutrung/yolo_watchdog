@@ -10,9 +10,9 @@ Keyword: yolov8, esp now, python app, hardware design.
 
 ## 📑 Mô Tả Dự Án
 
-Xây dựng một hệ thống máy quay giám sát dựa trên thuật toán học máy YOLO (You Only Look Once). Cho phép xác định ra các tình huống nguy hiểm dựa trên việc xác định được các vật thể bị cấm trong từng khu vực riêng biệt. Tăng độ an toàn cho các khu vực bằng việc đảm bảo các tình huống vi phạm an toàn khả năng phát hiện ra các tình huống không đảm bảo an toàn như việc thiếu đồ bảo hộ, không có người vận hành ở các vị trí quan trọng. Sau khi phát hiện được những tình huống, hệ thống sẽ kích hoạt cơ chế thông áo gửi tới người làm công tác giám sát từ xa thông qua sóng không dây. Hỗ trợ những giám sát viên làm việc hiệu quả và nhanh chóng hơn.
+Xây dựng một hệ thống máy quay giám sát dựa trên thuật toán học máy YOLO (You Only Look Once). Cho phép xác định ra các tình huống nguy hiểm dựa trên việc xác định được các vật thể bị cấm trong từng khu vực riêng biệt. Tăng độ an toàn cho các khu vực bằng việc đảm bảo các tình huống vi phạm an toàn khả năng phát hiện ra các tình huống không đảm bảo an toàn như việc thiếu đồ bảo hộ, không có người vận hành ở các vị trí quan trọng. Sau khi phát hiện được những tình huống, hệ thống sẽ kích hoạt cơ chế thông áo gửi tới người làm công tác giám sát từ xa thông qua sóng không dây ESP-NOW. Hỗ trợ những giám sát viên làm việc hiệu quả và nhanh chóng hơn.
 
-## ❓ What & Why YOLO Algorithm
+## ❓ YOLO Là Gì Và Tại Sao Sử Dụng YOLO
 __YOLO__ (You Only Look Once) is a real-time object detection algorithm that identifies objects in images or video frames with high speed and accuracy. Unlike traditional methods that scan an image in multiple passes, YOLO processes the entire image in a single forward pass, making it very efficient.
 
 It’s ideal for surveillance cameras due to its real-time detection speed and ability to track multiple objects efficiently.
@@ -23,7 +23,7 @@ It’s ideal for surveillance cameras due to its real-time detection speed and a
 
 ![Photo01](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/image_processor_diagram.png)
 
-## ❓ What & Why ESP-NOW
+## ❓ Sơ Lược Về Giao Thức ESP-NOW
 __ESP-NOW__ is a wireless communication protocol developed by Espressif for direct, low-power, peer-to-peer communication between devices, without the need for a Wi-Fi network. It uses the same 2.4GHz frequency as Wi-Fi but allows devices to send small packets of data to each other instantly, with minimal delay. It supports broadcasting to multiple devices and has a range similar to Wi-Fi.
 
 <br>
@@ -32,12 +32,13 @@ __ESP-NOW__ is a wireless communication protocol developed by Espressif for dire
 
 ![Photo02](https://github.com/kysutrung/yolo_watchdog/blob/main/mediaa/remote_monitor_diagram.png)
 
-## 💻 List of Features (working on process)
-__Image Processing Unit__
-- [x] Objects detection with custom dataset trained model
-- [x] Send notification via ESP NOW
+## 💻 Danh Sách Các Chức Năng Của Hệ Thống
 
-__Remote Monitor Unit__
+__Bộ Phận Phân Tích Hình Ảnh__
+- [x] Phát hiện vật thể với mô hình học máy tự huấn luyện
+- [x] 
+
+__Bộ Phận Cảnh Báo Từ Xa__
 - [x] Receive notification via ESP NOW
 - [x] Alert depend on setting
 - [ ] Good looking UI using SquareLine Studio
@@ -45,10 +46,10 @@ __Remote Monitor Unit__
 - [ ] Expansion port
 - [ ] Connection lost notification 
 
-__Auto Tracking Unit__
+__Bộ Phận Theo Dõi Tự Động__
 - [x] Auto move camera facing to object
 
-__Window PC App (ESP NOW UNIT needed)__
+__Ứng Dụng Điều Khiển Window__
 - [x] Whole system work right in Windows OS
 - [x] Control UI
 - [x] Display realtime video
